@@ -62,7 +62,6 @@ typings/
 
 # assets directory
 assets
-
 *~
 *.sw[mnpcod]
 .tmp
