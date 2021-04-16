@@ -6,8 +6,8 @@
  
 <ion-content>
   <ion-item>
-    <ion-button color="success" fill="solid" slot="end" (click)="filterGroups($event.target.nextSibling,true)" clickable>주간</ion-button>
-    <ion-button color="medium" fill="solid" slot="end" (click)="filterGroups($event.target.previousElementSibling,true)" clickable>야간</ion-button>
+    <ion-button color="success" fill="solid" slot="end" (click)="filterGroups($event.target.nextSibling, true)" clickable>주간</ion-button>
+    <ion-button color="medium" fill="solid" slot="end" (click)="filterGroups($event.target.previousElementSibling, false)" clickable>야간</ion-button>
   </ion-item>
   <ion-list>
     <ion-card *ngFor="let group of filteredGroups; let idx = index;">

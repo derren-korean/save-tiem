@@ -45,7 +45,7 @@ export class TimeCheckPage implements OnInit {
     if (reset) {
       this._reset();
     } else {
-      this.filteredGroups = this.recoderGroups.filter(recoder => recoder.isDayTime != isDayTime);
+      this.filteredGroups = this.recoderGroups.filter(recoder => recoder.isDayTime == isDayTime);
     }
   }
 
