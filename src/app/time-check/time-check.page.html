@@ -14,7 +14,7 @@
       <ion-card-header color="primary">
         <ion-label>{{group.location}}</ion-label>
       </ion-card-header>
-      <ion-item *ngFor="let recoder of group.recoders; let i = index;">
+      <ion-item *ngFor="let recoder of group.recoders; let recoderIdx = index;">
         <ion-grid>
           <ion-row>
             <ion-col size-sm="2">
@@ -23,30 +23,28 @@
             <ion-col size-sm="5">
               <ion-input 
                 type="text" 
-                id="{{_TIME_TYPE[0]}}-{{idx}}-{{i}}"
+                id="{{_TIME_TYPE[0]}}-{{idx}}-{{recoderIdx}}"
                 maxlength="4"
                 inputmode="numeric"
                 placeholder="점검시간"
+                [(ngModel)]="recoder.savedTime"
                 [attr.hasNext]="true"
                 [appShiftFocus]="_TIME_TYPE"
+                (ionChange)="save(group, recoderIdx)"
               ></ion-input>
             </ion-col>
             <ion-col size-sm="5">
               <ion-input 
                 type="text"
-                id="{{_TIME_TYPE[1]}}-{{idx}}-{{i}}"
+                id="{{_TIME_TYPE[1]}}-{{idx}}-{{recoderIdx}}"
                 maxlength="4"
                 inputmode="numeric" 
                 placeholder="저장된시간"
-                [attr.hasNext]="!!group.recoders[i+1]"
+                [(ngModel)]="recoder.checkTime"
+                [attr.hasNext]="!!group.recoders[recoderIdx+1]"
                 [appShiftFocus]="_TIME_TYPE"
+                (ionChange)="save(group, recoderIdx)"
               ></ion-input>
-            </ion-col>
-            <!-- 나중에 지울거-->
-            <ion-col size-sm="5">
-              <ion-item>
-                <ion-button color="medium" fill="solid" slot="end" (click)="save(idx, i, recoder)" clickable>저장</ion-button>
-              </ion-item>
             </ion-col>
           </ion-row>
         </ion-grid>
