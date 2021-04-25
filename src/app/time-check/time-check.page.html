@@ -6,6 +6,23 @@
  
 <ion-content>
   <ion-item>
+    
+  </ion-item>
+  <ion-item>
+    <!-- savedOnly가 선택되면, ion-select로 ngIf를 사용하여 대체한다.-->
+    <!-- ion-select에는 storage에서 불러온 날짜 list를 나열.-->
+    <ion-datetime 
+      displayFormat="YY/MM/DD" 
+      min="2021-04-27" 
+      max="2030" 
+      [(ngModel)]="datePicker"
+      (ionChange)="onChangeDate()"
+      >
+    </ion-datetime>
+    <ion-select placeholder="Select One">
+      <ion-select-option value="all" selected>전체날짜</ion-select-option>
+      <ion-select-option value="savedOnyl">저장된날짜</ion-select-option>
+    </ion-select>
     <ion-button color="success" fill="solid" slot="end" (click)="filterGroups($event.target.nextSibling, true)" clickable>주간</ion-button>
     <ion-button color="medium" fill="solid" slot="end" (click)="filterGroups($event.target.previousElementSibling, false)" clickable>야간</ion-button>
   </ion-item>

@@ -17,6 +17,7 @@ const FILTERED: string = "solid"
 export class TimeCheckPage implements OnInit {
 
   filteredGroups: RecoderGroup[];
+  datePicker: String = new Date().toLocaleString();
   private recoderGroups: RecoderGroup[];
   private _TIME_TYPE:string[] = ['check', 'save'];
   constructor(private tcService: TimeCheckService) {}
@@ -58,5 +59,12 @@ export class TimeCheckPage implements OnInit {
 
   save(group: RecoderGroup, recoderIdx: number) {
     console.log("location: "+group.location+", savedtime: "+group.recoders[recoderIdx].savedTime+", checkTime: "+group.recoders[recoderIdx].checkTime)
+  }
+
+  // 현재는 전체 날짜일 때만 작동한다.
+  // 저장된 날짜를 기준으로 할 때는, datePicker에 가장 최신 날짜가 들어가게 된다.
+  // 또한 날자가 선택되면, 해당 자료를 load 한다.
+  onChangeDate() {
+    console.log(this.datePicker)
   }
 }
