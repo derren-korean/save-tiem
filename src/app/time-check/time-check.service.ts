@@ -1,6 +1,4 @@
 import { Injectable} from '@angular/core';
-import { NativeStorage } from '@ionic-native/native-storage/ngx';
-import { Recoder } from './recoder.model';
 import { StationInfo } from './station-info';
 import { RecoderGroup } from './recoder-group.model';
 import { HttpClient } from '@angular/common/http';
@@ -15,12 +13,6 @@ interface InnerData {
   info: StationInfo;
 }
 
-export interface SaveData {
-  date: string;
-  location: string;
-  recoders: Recoder[];
-}
-
 @Injectable({
   providedIn: 'root'
 })
@@ -29,7 +21,7 @@ export class TimeCheckService {
   private _dataURL = '../../assets/data.json';
   private recoders:RecoderGroup[] = [];
 
-  constructor(private http: HttpClient, private nativeStorage: NativeStorage) {}
+  constructor(private http: HttpClient) {}
 
   fetchRecoders() {
     return this.http
@@ -49,21 +41,11 @@ export class TimeCheckService {
     this.recoders.push(new RecoderGroup(location, info));
   }
 
-  // todo
-  save(recoder: SaveData) {
-    this.nativeStorage.setItem('myitem', {property: 'value', anotherProperty: 'anotherValue'})
-    .then(
-      () => console.log('Stored item!'),
-      error => console.error('Error storing item', error)
-    );
+  save(yyyyMMdd: string, recoders: RecoderGroup[]) {
+    window.localStorage.setItem(yyyyMMdd, JSON.stringify(recoders));
   }
 
-  // todo
-  load() {
-    this.nativeStorage.getItem('myitem')
-    .then(
-      data => console.log(data),
-      error => console.error(error)
-    );
+  fatchDates(yyyyMMdd: string) :RecoderGroup[] {
+    return JSON.parse(window.localStorage.getItem(yyyyMMdd));
   }
 }
