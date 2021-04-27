@@ -6,28 +6,37 @@
  
 <ion-content>
   <ion-item>
-    <!-- savedOnly가 선택되면, ion-select로 ngIf를 사용하여 대체한다.-->
-    <!-- ion-select에는 storage에서 불러온 날짜 list를 나열.-->
-    <span *ngIf="dateType == 'all';else savedOnly">
       <ion-datetime 
-        displayFormat="YY/MM/DD" 
+        *ngIf="dateType == 'all';else savedOnly"
+        displayFormat="YYYY-MM-DD" 
         min="2021-04-25" 
         max="2030" 
         [(ngModel)]="datePicker"
-        (ionChange)="onChangeDate()">
+        (ionChange)="setRecordByDate(datePicker)">
       </ion-datetime>
-    </span>
     <ng-template #savedOnly>
-      <ion-select>
-        <ion-select-option *ngFor=""></ion-select-option>
+      <ion-select [(ngModel)]="datePicker" (ionChange)="setRecordByDate(datePicker)">
+        <ion-select-option *ngFor="let date of savedDates" [value]="date">{{date}}</ion-select-option>
       </ion-select>
     </ng-template>
-    <ion-select placeholder="Select One" [(ngModel)]="dateType">
-      <ion-select-option value="all">전체날짜</ion-select-option>
-      <ion-select-option value="savedOnyl">저장된날짜</ion-select-option>
+    <ion-select [(ngModel)]="dateType" (ionChange)="onChangeDateType(dateType)">
+      <ion-select-option value="all">전체</ion-select-option>
+      <ion-select-option value="savedOnly">저장</ion-select-option>
     </ion-select>
-    <ion-button color="success" fill="solid" slot="end" (click)="filterGroups($event.target.nextSibling, true)" clickable>주간</ion-button>
-    <ion-button color="medium" fill="solid" slot="end" (click)="filterGroups($event.target.previousElementSibling, false)" clickable>야간</ion-button>
+    <span class="ion-padding-start">
+      <ion-button 
+        color="success" 
+        fill="solid" 
+        slot="end" 
+        (click)="filterGroups($event.target.nextSibling, true)" 
+        clickable>주간</ion-button>
+      <ion-button 
+        color="medium" 
+        fill="solid" 
+        slot="end" 
+        (click)="filterGroups($event.target.previousElementSibling, false)" 
+        clickable>야간</ion-button>
+    </span>
   </ion-item>
   <ion-list>
     <ion-card *ngFor="let group of filteredGroups; let idx = index;">
@@ -50,7 +59,7 @@
                 [(ngModel)]="recoder.savedTime"
                 [attr.hasNext]="true"
                 [appShiftFocus]="_TIME_TYPE"
-                (ionChange)="save(group, recoderIdx)"
+                (ionChange)="save()"
               ></ion-input>
             </ion-col>
             <ion-col size-sm="5">
@@ -63,7 +72,7 @@
                 [(ngModel)]="recoder.checkTime"
                 [attr.hasNext]="!!group.recoders[recoderIdx+1]"
                 [appShiftFocus]="_TIME_TYPE"
-                (ionChange)="save(group, recoderIdx)"
+                (ionChange)="save()"
               ></ion-input>
             </ion-col>
           </ion-row>

@@ -16,7 +16,7 @@ export class TimeCheckPage implements OnInit {
 
   filteredGroups: RecoderGroup[];
   dateType: string = 'all'
-  datePicker: String = new Date().toLocaleString();
+  datePicker: string;
   savedDates: string[];
   private clearRecoderGroups: RecoderGroup[];
   private recoderGroups: RecoderGroup[];
@@ -24,9 +24,10 @@ export class TimeCheckPage implements OnInit {
   constructor(private tcService: TimeCheckService) {}
 
   ngOnInit() {
+    this.datePicker = this._getYYYYmmDD(new Date().toISOString());
     this.tcService.fetchRecoders().subscribe(recoders => {
       this.clearRecoderGroups = recoders;
-      this._setRecoders(this._fetch(this._getYYYYmmDD()));
+      this._setRecoders(this._fetch(this._getYYYYmmDD(this.datePicker)));
     });
   }
 
@@ -41,6 +42,28 @@ export class TimeCheckPage implements OnInit {
     this._filterByDayTime(sibling.fill == FILTERED, isDayTime)
   }
 
+  save() {
+    this.tcService.save(this._getYYYYmmDD(this.datePicker), this.recoderGroups)
+  }
+
+  onChangeDateType(dateType: string) {
+    if (dateType == 'savedOnly') {
+      this._initSavedDates();
+      if (this.savedDates.length > -1) {
+        this.datePicker = this.savedDates[0];
+      }
+    }
+    this.setRecordByDate(this.datePicker);
+  }
+
+  setRecordByDate(date: string) {
+    let _temp: RecoderGroup[] = this._fetch(this._getYYYYmmDD(date))
+    if (!_temp) {
+      _temp = this.clearRecoderGroups;
+    }
+    this._setRecoders(_temp);
+  }
+
   _changeButtonState(button: IonButton) {
     button.disabled = !button.disabled;
     button.fill = button.fill == "outline" ? "solid" : "outline"; // 하.. enum 쓰고싶다 ㅠㅠ
@@ -52,30 +75,21 @@ export class TimeCheckPage implements OnInit {
       this.recoderGroups.filter(recoder => recoder.isDayTime == isDayTime);
   }
 
-  save(group: RecoderGroup, recoderIdx: number) {
-    this.tcService.save(this._getYYYYmmDD(), this.recoderGroups)
-  }
-
   _fetch(yyyyMMdd: string): RecoderGroup[] {
     return this.tcService.fatchDates(yyyyMMdd);
   }
 
-  _getYYYYmmDD():string {
-    return new Date(this.datePicker.toString()).toISOString().substring(0,10);
+  _getYYYYmmDD(date: string):string {
+    return new Date(date).toISOString().substring(0,10);
   }
 
-  // 저장된 날짜에 들어갈 녀석들
-  fetchAllDates():string[] {
-    return [];
-  }
-
-  onChangeDate() {
-    let _temp: RecoderGroup[] = this._fetch(this._getYYYYmmDD())
-    if (!_temp) {
-      _temp = this.clearRecoderGroups;
+  _initSavedDates() {
+    this.savedDates = [];
+    for(var i =0; i < localStorage.length; i++) {
+      this.savedDates.push(localStorage.key(i))
     }
-    this._setRecoders(_temp);
   }
+
   _setRecoders(recoders: RecoderGroup[]) {
     this.recoderGroups = recoders;
     this.filteredGroups = [...this.recoderGroups];
