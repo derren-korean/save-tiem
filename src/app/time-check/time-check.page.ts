@@ -25,9 +25,12 @@ export class TimeCheckPage implements OnInit {
 
   ngOnInit() {
     this.datePicker = this._getYYYYmmDD(new Date().toISOString());
+    const _temp: RecoderGroup[] = this._fetch(this._getYYYYmmDD(this.datePicker));
+    
     this.tcService.fetchRecoders().subscribe(recoders => {
-      this.clearRecoderGroups = recoders;
-      this._setRecoders(this._fetch(this._getYYYYmmDD(this.datePicker)));
+      this.clearRecoderGroups = [...recoders];
+      recoders = _temp ? _temp : recoders;
+      this._setRecoders(recoders);
     });
   }
 
