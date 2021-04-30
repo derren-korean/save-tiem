@@ -21,7 +21,7 @@
     </ng-template>
     <ion-select [(ngModel)]="dateType" (ionChange)="onChangeDateType(dateType)">
       <ion-select-option value="all">전체</ion-select-option>
-      <ion-select-option value="savedOnly">저장</ion-select-option>
+      <ion-select-option value="savedOnly">기록</ion-select-option>
     </ion-select>
   </ion-item>
   <ion-item>
@@ -61,6 +61,7 @@
                 [(ngModel)]="recoder.savedTime"
                 [attr.hasNext]="true"
                 [appShiftFocus]="_TIME_TYPE"
+                [readonly]="dateType == 'savedOnly'"
                 (ionChange)="save()"
               ></ion-input>
             </ion-col>
@@ -74,6 +75,7 @@
                 [(ngModel)]="recoder.checkTime"
                 [attr.hasNext]="!!group.recoders[recoderIdx+1]"
                 [appShiftFocus]="_TIME_TYPE"
+                [readonly]="dateType == 'savedOnly'"
                 (ionChange)="save()"
               ></ion-input>
             </ion-col>

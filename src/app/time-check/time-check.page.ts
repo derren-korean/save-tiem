@@ -56,14 +56,20 @@ export class TimeCheckPage implements OnInit {
         this.datePicker = this.savedDates[0];
       }
     }
-    this.setRecordByDate(this.datePicker);
+    this.setRecordToSavedOnly(this.datePicker);
   }
 
-  setRecordByDate(date: string) {
+  setRecordToSavedOnly(date: string) {
     let _temp: RecoderGroup[] = this._fetch(this._getYYYYmmDD(date))
     if (!_temp) {
       _temp = this.clearRecoderGroups;
     }
+    _temp = _temp.filter(group => {
+      group.recoders = group.recoders.filter(record => {
+        return record.checkTime != null || record.savedTime != null
+      });
+      return group.recoders.length > 0
+    });
     this._setRecoders(_temp);
   }
 
