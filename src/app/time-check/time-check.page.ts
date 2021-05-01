@@ -16,7 +16,7 @@ export class TimeCheckPage implements OnInit {
 
   filteredGroups: RecoderGroup[];
   dateType: string = 'all'
-  datePicker: string;
+  datePicker: string; //format: yyyy-mm-dd
   savedDates: string[];
   private clearRecoderGroups: RecoderGroup[];
   private recoderGroups: RecoderGroup[];
@@ -24,9 +24,9 @@ export class TimeCheckPage implements OnInit {
   constructor(private tcService: TimeCheckService) {}
 
   ngOnInit() {
-    this.datePicker = this._getYYYYmmDD(new Date().toISOString());
-    const _temp: RecoderGroup[] = this._fetch(this._getYYYYmmDD(this.datePicker));
-    
+    this._initSavedDates();
+    this.datePicker = this._nowYYYYmmDD();
+    const _temp: RecoderGroup[] = this._fetch(this.datePicker);
     this.tcService.fetchRecoders().subscribe(recoders => {
       this.clearRecoderGroups = [...recoders];
       recoders = _temp ? _temp : recoders;
@@ -46,30 +46,49 @@ export class TimeCheckPage implements OnInit {
   }
 
   save() {
-    this.tcService.save(this._getYYYYmmDD(this.datePicker), this.recoderGroups)
+    this.tcService.save(this.datePicker, this.recoderGroups);
+    if (!this.savedDates.length) {
+      this._initSavedDates();
+    }
   }
 
-  onChangeDateType(dateType: string) {
+  onChangeDateType(datePicker: string, dateType: string) {
     if (dateType == 'savedOnly') {
-      this._initSavedDates();
-      if (this.savedDates.length > -1) {
-        this.datePicker = this.savedDates[0];
+      this.datePicker = this._getBySavedDate(datePicker);
+    }
+    this._initRecordGroup(this.datePicker, dateType == 'savedOnly');
+  }
+
+  _getBySavedDate(datePicker: string):string {
+    this._initSavedDates();
+    if (this.savedDates.length > -1) {
+      if (!this.savedDates.find(date => date == datePicker)) {
+        datePicker = this._maxDateOf([...this.savedDates]);
       }
     }
-    this.setRecordToSavedOnly(this.datePicker);
+    return datePicker;
   }
 
-  setRecordToSavedOnly(date: string) {
-    let _temp: RecoderGroup[] = this._fetch(this._getYYYYmmDD(date))
-    if (!_temp) {
-      _temp = this.clearRecoderGroups;
+  _maxDateOf(dates: string[]):string {
+    return dates.sort().reverse()[0];
+  }
+
+  _initRecordGroup(date: string, savedOnly: boolean) {
+    if(!date) {
+      date = this._nowYYYYmmDD();
     }
-    _temp = _temp.filter(group => {
-      group.recoders = group.recoders.filter(record => {
-        return record.checkTime != null || record.savedTime != null
+    let _temp: RecoderGroup[] = this._fetch(date);
+    if (!_temp) {
+      _temp = [...this.clearRecoderGroups];
+    }
+    if (savedOnly) {
+      _temp = _temp.filter(group => {
+        group.recoders = group.recoders.filter(record => {
+          return record.checkTime != null || record.savedTime != null
+        });
+        return group.recoders.length > 0
       });
-      return group.recoders.length > 0
-    });
+    }
     this._setRecoders(_temp);
   }
 
@@ -88,8 +107,15 @@ export class TimeCheckPage implements OnInit {
     return this.tcService.fatchDates(yyyyMMdd);
   }
 
-  _getYYYYmmDD(date: string):string {
-    return new Date(date).toISOString().substring(0,10);
+  _nowYYYYmmDD():string {
+    let _temp = new Date();
+    return _temp.getFullYear()+'-'
+      +this._toTwoDigits((_temp.getMonth()+1).toString())+'-'
+      +this._toTwoDigits(_temp.getDate().toString());
+  }
+
+  _toTwoDigits(numeric: string):string {
+    return numeric.length == 1 ? "0"+numeric : numeric;
   }
 
   _initSavedDates() {

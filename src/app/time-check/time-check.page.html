@@ -9,17 +9,18 @@
       <ion-datetime 
         *ngIf="dateType == 'all';else savedOnly"
         displayFormat="YYYY-MM-DD" 
+        pickerFormat="YYYY-MM-DD"
         min="2021-04-25" 
-        max="2030" 
+        max="2030"
         [(ngModel)]="datePicker"
-        (ionChange)="setRecordByDate(datePicker)">
+        (ionChange)="onChangeDateType(datePicker, dateType)">
       </ion-datetime>
     <ng-template #savedOnly>
-      <ion-select [(ngModel)]="datePicker" (ionChange)="setRecordByDate(datePicker)">
+      <ion-select [(ngModel)]="datePicker" (ionChange)="onChangeDateType(datePicker, dateType)">
         <ion-select-option *ngFor="let date of savedDates" [value]="date">{{date}}</ion-select-option>
       </ion-select>
     </ng-template>
-    <ion-select [(ngModel)]="dateType" (ionChange)="onChangeDateType(dateType)">
+    <ion-select [(ngModel)]="dateType" [disabled]="!savedDates.length" (ionChange)="onChangeDateType(datePicker, dateType)">
       <ion-select-option value="all">전체</ion-select-option>
       <ion-select-option value="savedOnly">기록</ion-select-option>
     </ion-select>
@@ -62,7 +63,7 @@
                 [attr.hasNext]="true"
                 [appShiftFocus]="_TIME_TYPE"
                 [readonly]="dateType == 'savedOnly'"
-                (ionChange)="save()"
+                (keyup)="save()"
               ></ion-input>
             </ion-col>
             <ion-col size-sm="5">
@@ -76,7 +77,7 @@
                 [attr.hasNext]="!!group.recoders[recoderIdx+1]"
                 [appShiftFocus]="_TIME_TYPE"
                 [readonly]="dateType == 'savedOnly'"
-                (ionChange)="save()"
+                (keyup)="save()"
               ></ion-input>
             </ion-col>
           </ion-row>
