@@ -1,5 +1,4 @@
-import { Directive, ElementRef, Input, Renderer } from '@angular/core';
-import { IonAvatar, IonInput } from '@ionic/angular';
+import { Directive, ElementRef, Input} from '@angular/core';
 
 @Directive({
   selector: '[appShiftFocus]',

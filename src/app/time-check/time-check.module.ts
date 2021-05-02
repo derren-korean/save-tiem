@@ -6,7 +6,9 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { TimeCheckPage } from './time-check.page';
-import { ShiftFocusDirective } from './shift-focus.directive';
+import { ShiftFocusDirective } from './time-write/shift-focus.directive';
+import { TimeWriteComponent } from './time-write/time-write.component';
+import { TimeReadComponent } from './time-read/time-read.component';
 
 const routes: Routes = [
   {
@@ -22,6 +24,6 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [TimeCheckPage, ShiftFocusDirective]
+  declarations: [TimeCheckPage, ShiftFocusDirective, TimeWriteComponent, TimeReadComponent]
 })
 export class TimeCheckPageModule {}

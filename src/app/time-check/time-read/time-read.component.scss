@@ -1,0 +1,23 @@
+ion-item {
+  font-size: large;
+}
+
+ion-item, ion-grid, ion-col, ion-input {
+  padding: unset;
+}
+
+ion-col {
+  align-self: center
+}
+
+ion-item {
+  height: 2em;
+}
+
+ion-card-header {
+  padding: 0.5em;
+}
+
+input.native-input {
+  padding: 0;
+}

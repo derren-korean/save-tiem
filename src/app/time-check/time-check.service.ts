@@ -1,6 +1,6 @@
 import { Injectable} from '@angular/core';
-import { StationInfo } from './station-info';
-import { RecoderGroup } from './recoder-group.model';
+import { StationInfo } from './model/station-info';
+import { RecoderGroup } from './model/recoder-group.model';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 

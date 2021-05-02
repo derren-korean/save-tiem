@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IonButton } from '@ionic/angular';
 
-import { RecoderGroup } from './recoder-group.model';
+import { RecoderGroup } from './model/recoder-group.model';
 import { TimeCheckService } from './time-check.service';
 
 const FILTERED: string = "solid"
@@ -20,7 +20,6 @@ export class TimeCheckPage implements OnInit {
   savedDates: string[];
   private clearRecoderGroups: RecoderGroup[];
   private recoderGroups: RecoderGroup[];
-  private _TIME_TYPE:string[] = ['check', 'save'];
   constructor(private tcService: TimeCheckService) {}
 
   ngOnInit() {
