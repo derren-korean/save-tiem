@@ -52,6 +52,7 @@ export class TimeCheckPage implements OnInit {
   }
 
   onChangeDateType(datePicker: string, dateType: string) {
+    datePicker = this._toYYYYmmDD(datePicker);
     if (dateType == 'savedOnly') {
       this.datePicker = this._getBySavedDate(datePicker);
     }
@@ -108,6 +109,13 @@ export class TimeCheckPage implements OnInit {
 
   _nowYYYYmmDD():string {
     let _temp = new Date();
+    return _temp.getFullYear()+'-'
+      +this._toTwoDigits((_temp.getMonth()+1).toString())+'-'
+      +this._toTwoDigits(_temp.getDate().toString());
+  }
+
+  _toYYYYmmDD(date: string):string {
+    let _temp = new Date(date);
     return _temp.getFullYear()+'-'
       +this._toTwoDigits((_temp.getMonth()+1).toString())+'-'
       +this._toTwoDigits(_temp.getDate().toString());
