@@ -5,26 +5,10 @@
 </ion-header>
  
 <ion-content>
-  <ion-item>
-      <ion-datetime 
-        *ngIf="dateType == 'all';else savedOnly"
-        displayFormat="YYYY-MM-DD" 
-        pickerFormat="YYYY-MM-DD"
-        min="2021-04-25" 
-        max="2030"
-        [(ngModel)]="datePicker"
-        (ionChange)="onChangeDateType(datePicker, dateType)">
-      </ion-datetime>
-    <ng-template #savedOnly>
-      <ion-select [(ngModel)]="datePicker" (ionChange)="onChangeDateType(datePicker, dateType)">
-        <ion-select-option *ngFor="let date of savedDates" [value]="date">{{date}}</ion-select-option>
-      </ion-select>
-    </ng-template>
-    <ion-select [(ngModel)]="dateType" [disabled]="!savedDates.length" (ionChange)="onChangeDateType(datePicker, dateType)">
-      <ion-select-option value="all">전체</ion-select-option>
-      <ion-select-option value="savedOnly">내역</ion-select-option>
-    </ion-select>
-  </ion-item>
+  <app-date 
+  (changeDate)="onDateChanged($event)"
+  (changeDateType)="onDateTypeChanged($event)">
+  </app-date>
   <ion-item>
     <span class="ion-padding-start">
       <ion-button 
@@ -45,15 +29,15 @@
     <!--
       todo: 시간 표기는 hh:mm로 변경
     -->
-    <app-time-write 
-      *ngIf="dateType == 'all';else readComponent"
+    <app-time-read 
+      *ngIf="isReadMode;else writeComponent"
       [filteredGroups]="filteredGroups"
-      (save)="save()"
-    ></app-time-write>
-    <ng-template #readComponent>
-      <app-time-read
+    ></app-time-read>
+    <ng-template #writeComponent>
+      <app-time-write
         [filteredGroups]="filteredGroups"
-      ></app-time-read>
+        (save)="save()"
+      ></app-time-write>
     </ng-template>
   </ion-list>
 </ion-content>

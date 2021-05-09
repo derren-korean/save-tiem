@@ -1,0 +1,19 @@
+<ion-item>
+  <ion-datetime 
+    *ngIf="dateType == 'all';else savedOnly"
+    displayFormat="YYYY-MM-DD"
+    min="2021-05-09" 
+    max="2030"
+    [(ngModel)]="datePicker"
+    (ionChange)="onChangeDate()">
+  </ion-datetime>
+  <ng-template #savedOnly>
+    <ion-select [(ngModel)]="datePicker" (ionChange)="onChangeDate()">
+      <ion-select-option *ngFor="let date of savedDates" [value]="date">{{date}}</ion-select-option>
+    </ion-select>
+  </ng-template>
+  <ion-select [(ngModel)]="dateType" [disabled]="!savedDates.length" (ionChange)="onChangeDateType()">
+    <ion-select-option value="all">전체</ion-select-option>
+    <ion-select-option value="readMode">내역</ion-select-option>
+  </ion-select>
+</ion-item>

@@ -12,25 +12,31 @@ const FILTERED: string = "solid"
   styleUrls: ['./time-check.page.scss'],
 })
 
-export class TimeCheckPage implements OnInit {
-
+export class TimeCheckPage {
+  date: string;
+  isReadMode: boolean = false;
   filteredGroups: RecoderGroup[];
-  dateType: string = 'all'
-  datePicker: string; //format: yyyy-mm-dd
-  savedDates: string[];
-  private clearRecoderGroups: RecoderGroup[];
+  private emptyRecoderGroups: RecoderGroup[] = [];
   private recoderGroups: RecoderGroup[];
   constructor(private tcService: TimeCheckService) {}
 
-  ngOnInit() {
-    this._initSavedDates();
-    this.datePicker = this._nowYYYYmmDD();
-    const _temp: RecoderGroup[] = this._fetch(this.datePicker);
+  // todo: readMode일 경우, 저장되어있는 자료만 보여지도록 filteredGroups을 time-read로 옮긴다.
+  ionViewDidEnter() {
+    const _temp: RecoderGroup[] = this._fetch(this.date);
     this.tcService.fetchRecoders().subscribe(recoders => {
-      this.clearRecoderGroups = [...recoders];
+      this.emptyRecoderGroups = [...recoders];
       recoders = _temp ? _temp : recoders;
-      this._setRecoders(recoders);
+      this._setRecoders([...recoders]);
     });
+  }
+
+  onDateChanged(event: {date: string}) {
+    this.date = event.date;
+    this._initRecordGroup();
+  }
+
+  onDateTypeChanged(event: {isReadMode: boolean}) {
+    this.isReadMode = event.isReadMode;
   }
 
   // 선택한 state만 보기!
@@ -45,43 +51,17 @@ export class TimeCheckPage implements OnInit {
   }
 
   save() {
-    this.tcService.save(this.datePicker, this.recoderGroups);
-    if (!this.savedDates.length) {
-      this._initSavedDates();
-    }
+    this.tcService.save(this.date, this.recoderGroups);
+    // disable 유형 변경 로직 빠짐
   }
 
-  onChangeDateType(datePicker: string, dateType: string) {
-    datePicker = this._toYYYYmmDD(datePicker);
-    if (dateType == 'savedOnly') {
-      this.datePicker = this._getBySavedDate(datePicker);
-    }
-    this._initRecordGroup(this.datePicker, dateType == 'savedOnly');
-  }
-
-  _getBySavedDate(datePicker: string):string {
-    this._initSavedDates();
-    if (this.savedDates.length > -1) {
-      if (!this.savedDates.find(date => date == datePicker)) {
-        datePicker = this._maxDateOf([...this.savedDates]);
-      }
-    }
-    return datePicker;
-  }
-
-  _maxDateOf(dates: string[]):string {
-    return dates.sort().reverse()[0];
-  }
-
-  _initRecordGroup(date: string, savedOnly: boolean) {
-    if(!date) {
-      date = this._nowYYYYmmDD();
-    }
-    let _temp: RecoderGroup[] = this._fetch(date);
+  _initRecordGroup() {
+    let _temp: RecoderGroup[] = this._fetch(this.date);
     if (!_temp) {
-      _temp = [...this.clearRecoderGroups];
+      this._emptyRecorders(this.emptyRecoderGroups);
+      _temp = this.emptyRecoderGroups;
     }
-    if (savedOnly) {
+    if (this.isReadMode) {
       _temp = _temp.filter(group => {
         group.recoders = group.recoders.filter(record => {
           return record.checkTime != null || record.savedTime != null
@@ -89,7 +69,16 @@ export class TimeCheckPage implements OnInit {
         return group.recoders.length > 0
       });
     }
-    this._setRecoders(_temp);
+    this._setRecoders([..._temp]);
+  }
+
+  _emptyRecorders(recoders: RecoderGroup[]) {
+    this.recoderGroups.forEach(group => {
+      group.recoders.forEach(recoder => {
+        recoder.checkTime = null;
+        recoder.savedTime = null;
+      })
+    })
   }
 
   _changeButtonState(button: IonButton) {
@@ -105,31 +94,6 @@ export class TimeCheckPage implements OnInit {
 
   _fetch(yyyyMMdd: string): RecoderGroup[] {
     return this.tcService.fatchDates(yyyyMMdd);
-  }
-
-  _nowYYYYmmDD():string {
-    let _temp = new Date();
-    return _temp.getFullYear()+'-'
-      +this._toTwoDigits((_temp.getMonth()+1).toString())+'-'
-      +this._toTwoDigits(_temp.getDate().toString());
-  }
-
-  _toYYYYmmDD(date: string):string {
-    let _temp = new Date(date);
-    return _temp.getFullYear()+'-'
-      +this._toTwoDigits((_temp.getMonth()+1).toString())+'-'
-      +this._toTwoDigits(_temp.getDate().toString());
-  }
-
-  _toTwoDigits(numeric: string):string {
-    return numeric.length == 1 ? "0"+numeric : numeric;
-  }
-
-  _initSavedDates() {
-    this.savedDates = [];
-    for(var i =0; i < localStorage.length; i++) {
-      this.savedDates.push(localStorage.key(i))
-    }
   }
 
   _setRecoders(recoders: RecoderGroup[]) {

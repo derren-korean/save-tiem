@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { RecoderGroup } from '../model/recoder-group.model';
+import { Recoder } from '../model/recoder.model';
 
 @Component({
   selector: 'app-time-read',
@@ -12,5 +13,4 @@ export class TimeReadComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {}
-
 }
