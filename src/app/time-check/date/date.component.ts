@@ -1,4 +1,6 @@
-import { Component, EventEmitter, OnInit, Output, ɵ_sanitizeHtml } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Events } from '@ionic/angular';
+import { TimeCheckService } from '../time-check.service';
 
 @Component({
   selector: 'app-date',
@@ -12,11 +14,18 @@ export class DateComponent implements OnInit {
   dateType: string = 'all'
   savedDates: string[];
 
-  constructor() { }
+  constructor(public events: Events) { }
 
   ngOnInit() {
     this._emitDateChaged();
     this._initSavedDates();
+    this.events.subscribe('savedTime:updated', () => {
+      this._initSavedDates();
+      if (this.savedDates.length) {
+        debugger;
+        this.events.unsubscribe('savedTime:updated');
+      }
+    });
   }
 
   _emitDateChaged() {
@@ -34,11 +43,14 @@ export class DateComponent implements OnInit {
   }
 
   onChangeDateType() {
-    this._initSavedDates();
-    if (this.savedDates.length > -1) {
-      if (!this.savedDates.find(date => date == this.datePicker)) {
-        this.datePicker = this.savedDates[0]
-        this._emitDateChaged();
+    if (this._isReadMode) {
+      this._initSavedDates();
+      if (this.savedDates.length > -1) {
+        this.datePicker = this._toYYYYmmDD(this.datePicker);
+        if (!this.savedDates.find(date => date == this.datePicker)) {
+          this.datePicker = this.savedDates[0]
+          this._emitDateChaged();
+        }
       }
     }
     this.changeDateType.emit({isReadMode: this._isReadMode()})
@@ -59,7 +71,7 @@ export class DateComponent implements OnInit {
     for(var i =0; i < localStorage.length; i++) {
       this.savedDates.push(localStorage.key(i))
     }
-    this.savedDates.sort().reverse();;
+    this.savedDates.sort().reverse();
   }
 
   _nowYYYYmmDD():string {

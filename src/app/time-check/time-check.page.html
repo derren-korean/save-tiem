@@ -26,9 +26,6 @@
     </span>
   </ion-item>
   <ion-list>
-    <!--
-      todo: 시간 표기는 hh:mm로 변경
-    -->
     <app-time-read 
       *ngIf="isReadMode;else writeComponent"
       [filteredGroups]="filteredGroups"

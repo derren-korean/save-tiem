@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { IonButton } from '@ionic/angular';
 
 import { RecoderGroup } from './model/recoder-group.model';
@@ -20,7 +20,6 @@ export class TimeCheckPage {
   private recoderGroups: RecoderGroup[];
   constructor(private tcService: TimeCheckService) {}
 
-  // todo: readMode일 경우, 저장되어있는 자료만 보여지도록 filteredGroups을 time-read로 옮긴다.
   ionViewDidEnter() {
     const _temp: RecoderGroup[] = this._fetch(this.date);
     this.tcService.fetchRecoders().subscribe(recoders => {
@@ -37,6 +36,7 @@ export class TimeCheckPage {
 
   onDateTypeChanged(event: {isReadMode: boolean}) {
     this.isReadMode = event.isReadMode;
+    this._initRecordGroup();
   }
 
   // 선택한 state만 보기!
@@ -52,16 +52,12 @@ export class TimeCheckPage {
 
   save() {
     this.tcService.save(this.date, this.recoderGroups);
-    // disable 유형 변경 로직 빠짐
   }
 
   _initRecordGroup() {
     let _temp: RecoderGroup[] = this._fetch(this.date);
-    if (!_temp) {
-      this._emptyRecorders(this.emptyRecoderGroups);
-      _temp = this.emptyRecoderGroups;
-    }
-    if (this.isReadMode) {
+    _temp = _temp ? _temp : this._emptyRecorders();
+    if (this.isReadMode) { 
       _temp = _temp.filter(group => {
         group.recoders = group.recoders.filter(record => {
           return record.checkTime != null || record.savedTime != null
@@ -72,13 +68,14 @@ export class TimeCheckPage {
     this._setRecoders([..._temp]);
   }
 
-  _emptyRecorders(recoders: RecoderGroup[]) {
-    this.recoderGroups.forEach(group => {
+  _emptyRecorders() {
+    this.emptyRecoderGroups.forEach(group => {
       group.recoders.forEach(recoder => {
         recoder.checkTime = null;
         recoder.savedTime = null;
       })
     })
+    return this.emptyRecoderGroups;
   }
 
   _changeButtonState(button: IonButton) {

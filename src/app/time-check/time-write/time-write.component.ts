@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { RecoderGroup } from '../model/recoder-group.model';
-import { Recoder } from '../model/recoder.model';
 
 @Component({
   selector: 'app-time-write',
