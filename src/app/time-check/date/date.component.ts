@@ -22,7 +22,6 @@ export class DateComponent implements OnInit {
     this.events.subscribe('savedTime:updated', () => {
       this._initSavedDates();
       if (this.savedDates.length) {
-        debugger;
         this.events.unsubscribe('savedTime:updated');
       }
     });

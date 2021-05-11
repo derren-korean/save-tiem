@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonButton } from '@ionic/angular';
 
 import { RecoderGroup } from './model/recoder-group.model';
+import { Recoder } from './model/recoder.model';
 import { TimeCheckService } from './time-check.service';
 
 const FILTERED: string = "solid"
@@ -58,11 +59,12 @@ export class TimeCheckPage {
     let _temp: RecoderGroup[] = this._fetch(this.date);
     _temp = _temp ? _temp : this._emptyRecorders();
     if (this.isReadMode) { 
+      let __has = (a: string): boolean => !!a
+      let _has = (recoder: Recoder): boolean => __has(recoder.checkTime) || __has(recoder.savedTime);
+
       _temp = _temp.filter(group => {
-        group.recoders = group.recoders.filter(record => {
-          return record.checkTime != null || record.savedTime != null
-        });
-        return group.recoders.length > 0
+        group.recoders = group.recoders.filter(recorder => _has(recorder));
+        return group.recoders.length > 0;
       });
     }
     this._setRecoders([..._temp]);

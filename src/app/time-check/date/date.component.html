@@ -12,8 +12,14 @@
       <ion-select-option *ngFor="let date of savedDates" [value]="date">{{date}}</ion-select-option>
     </ion-select>
   </ng-template>
-  <ion-select [(ngModel)]="dateType" [disabled]="!savedDates.length" (ionChange)="onChangeDateType()">
-    <ion-select-option value="all">전체</ion-select-option>
-    <ion-select-option value="readMode">내역</ion-select-option>
-  </ion-select>
+  <ion-segment (ionChange)="onChangeDateType()" [(ngModel)]="dateType" scrollable value="all" color="tertiary">
+    <ion-segment-button value="all">
+      <ion-icon src="../../../../assets/icon/pencil-outline.svg"></ion-icon>
+      <ion-label>저장 모드</ion-label>
+    </ion-segment-button>
+    <ion-segment-button [disabled]="!savedDates.length" value="readMode">
+      <ion-icon src="../../../../assets/icon/reader-outline.svg"></ion-icon>
+      <ion-label>기록 보기</ion-label>
+    </ion-segment-button>
+  </ion-segment>
 </ion-item>

@@ -1,6 +1,6 @@
 export class Recoder {
   constructor(
     public station: string,
-    public checkTime: Date,
-    public savedTime: Date,) {}
+    public checkTime: string,
+    public savedTime: string,) {}
 }
