@@ -2,7 +2,7 @@ import { Directive, ElementRef, Input} from '@angular/core';
 
 @Directive({
   selector: '[appShiftFocus]',
-  host: { '(keyup)': 'onkeyup()'}
+  host: { '(keyup)': 'onkeyup($event)'}
 })
 export class ShiftFocusDirective {
 
@@ -11,12 +11,14 @@ export class ShiftFocusDirective {
   @Input('appShiftFocus') TIME_TYPE: string[];
   constructor(private el: ElementRef) {}
 
-  onkeyup() {
+  onkeyup(event: KeyboardEvent) {
     if (this._INPUT_MAX !== this.el.nativeElement.value.length) {
       return;
     }
     const _el = this.el.nativeElement;
-    this._shiftFocusIfHasNext(_el.id, _el.getAttribute('hasNext'));
+    if (event.key != "Backspace") {
+      this._shiftFocusIfHasNext(_el.id, _el.getAttribute('hasNext'));
+    }
   }
 
   _shiftFocusIfHasNext(id: string, hasNext:string) {

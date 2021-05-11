@@ -24,6 +24,12 @@
         (click)="filterGroups($event.target.previousElementSibling, false)" 
         clickable>야간</ion-button>
     </span>
+    <span>
+      <ion-item>
+        <ion-label>오타방지모드</ion-label>
+        <ion-toggle (ionChange)="autoMode = !autoMode" color="danger" checked></ion-toggle>
+      </ion-item>
+    </span>
   </ion-item>
   <ion-list>
     <app-time-read 
@@ -33,6 +39,7 @@
     <ng-template #writeComponent>
       <app-time-write
         [filteredGroups]="filteredGroups"
+        [autoMode]="autoMode"
         (save)="save()"
       ></app-time-write>
     </ng-template>
