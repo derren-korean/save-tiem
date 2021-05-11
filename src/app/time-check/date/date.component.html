@@ -15,11 +15,9 @@
   <ion-segment (ionChange)="onChangeDateType()" [(ngModel)]="dateType" scrollable value="all" color="tertiary">
     <ion-segment-button value="all">
       <ion-icon src="../../../../assets/icon/pencil-outline.svg"></ion-icon>
-      <ion-label>저장 모드</ion-label>
     </ion-segment-button>
-    <ion-segment-button [disabled]="!savedDates.length" value="readMode">
-      <ion-icon src="../../../../assets/icon/reader-outline.svg"></ion-icon>
-      <ion-label>기록 보기</ion-label>
-    </ion-segment-button>
-  </ion-segment>
+  <ion-segment-button [disabled]="!savedDates.length" value="readMode">
+    <ion-icon src="../../../../assets/icon/reader-outline.svg"></ion-icon>
+  </ion-segment-button>
+</ion-segment>
 </ion-item>
