@@ -9,7 +9,7 @@ import { Recoder } from '../model/recoder.model';
 })
 export class TimeWriteComponent implements OnInit {
   @Input() filteredGroups: RecoderGroup[];
-  @Input() autoMode: boolean;
+  @Input() readonly: boolean;
   @Output() save = new EventEmitter<void>();
   _TIME_TYPE:string[] = ['check', 'save'];
   constructor() { }
@@ -17,7 +17,7 @@ export class TimeWriteComponent implements OnInit {
   ngOnInit() {}
 
   onSave(recoder:Recoder, prop:string) {
-    if (this.autoMode && this._hasMisType(recoder, prop)) {
+    if (this._hasMisType(recoder, prop)) {
       return;
     }
     this.save.emit();

@@ -17,7 +17,7 @@ export class TimeCheckPage {
   date: string;
   isReadMode: boolean = false;
   filteredGroups: RecoderGroup[];
-  autoMode: boolean = true;
+  readonly: boolean = true;
   private emptyRecoderGroups: RecoderGroup[] = [];
   private recoderGroups: RecoderGroup[];
   constructor(private tcService: TimeCheckService) {}
@@ -53,7 +53,9 @@ export class TimeCheckPage {
   }
 
   save() {
+    this.readonly = true;
     this.tcService.save(this.date, this.recoderGroups);
+    this.readonly = false;
   }
 
   _initRecordGroup() {
