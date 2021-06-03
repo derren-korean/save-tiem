@@ -15,13 +15,13 @@
         color="success" 
         fill="solid" 
         slot="end" 
-        (click)="filterGroups($event.target.nextSibling, true)" 
+        (click)="filterGroups($event.target, true)" 
         clickable>주간</ion-button>
       <ion-button 
         color="medium" 
         fill="solid" 
         slot="end" 
-        (click)="filterGroups($event.target.previousElementSibling, false)" 
+        (click)="filterGroups($event.target, false)" 
         clickable>야간</ion-button>
     </span>
   </ion-item>
@@ -33,7 +33,6 @@
     <ng-template #writeComponent>
       <app-time-write
         [filteredGroups]="filteredGroups"
-        [readonly]="readonly"
         (save)="save()"
       ></app-time-write>
     </ng-template>

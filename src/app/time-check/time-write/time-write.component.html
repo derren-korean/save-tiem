@@ -11,14 +11,13 @@
         <ion-col size-sm="5">
           <ion-input 
             type="text" 
-            maxlength="4"
             inputmode="numeric"
             placeholder="점검시간"
             [(ngModel)]="recoder.savedTime"
             [appShiftFocus]="_TIME_TYPE"
             id="{{_TIME_TYPE[0]}}-{{idx}}-{{recoderIdx}}"
             [attr.hasNext]="true"
-            (keyup)="onSave(recoder,'savedTime')"
+            (keyup)="onSave($event, recoder, 'savedTime')"
           ></ion-input>
         </ion-col>
         <ion-col size-sm="5">
@@ -31,8 +30,7 @@
             [appShiftFocus]="_TIME_TYPE"
             id="{{_TIME_TYPE[1]}}-{{idx}}-{{recoderIdx}}"
             [attr.hasNext]="!!group.recoders[recoderIdx+1]"
-            (keyup)="onSave(recoder, 'checkTime')"
-            [readonly]="readonly"
+            (keyup)="onSave($event, recoder, 'checkTime')"
           ></ion-input>
         </ion-col>
       </ion-row>

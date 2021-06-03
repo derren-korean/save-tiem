@@ -12,13 +12,39 @@ export class ShiftFocusDirective {
   constructor(private el: ElementRef) {}
 
   onkeyup(event: KeyboardEvent) {
-    if (this._INPUT_MAX !== this.el.nativeElement.value.length) {
+    const _el = this.el.nativeElement.firstElementChild;
+    if (_el.value != _el.value.trim()) {
+      this._removeLastString(_el);
       return;
     }
-    const _el = this.el.nativeElement;
+    if (this._INPUT_MAX !== _el.value.length) {
+      if (!this.isHHmm(_el.value)) {
+        this._removeLastString(_el);
+      }
+      return;
+    }
     if (event.key != "Backspace") {
       this._shiftFocusIfHasNext(_el.id, _el.getAttribute('hasNext'));
     }
+  }
+  
+  _removeLastString(el: any) {
+    el.value = el.value.substring(0, el.value.length-1);
+  }
+
+  // 입력한 시간이 23:59 이내로만 입력되어야 함. 여기에 넣기 진짜 싫은데 ㅠㅠ
+  // 안그러면 onkey event 불러올 때 충돌이 발생한다.
+  isHHmm(time: any): boolean {
+    let _isHHmm = true;
+    if (Number.isNaN(Number(time))) {
+      _isHHmm = false;
+    } else if (time.length == 1 && Number(time) > 2 || 
+      time.length == 2 && Number(time) > 23 || 
+      time.length == 3 && Number(time.substring(2,3) > 5) ||
+      time.length == 4 && Number(time.substring(2)) > 59) {
+        _isHHmm = false;
+    } 
+    return _isHHmm;
   }
 
   _shiftFocusIfHasNext(id: string, hasNext:string) {
