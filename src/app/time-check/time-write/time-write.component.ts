@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { RecoderGroup } from '../model/recoder-group.model';
-import { Recoder } from '../model/recoder.model';
+import {SaveData} from '../time-check.page';
 
 @Component({
   selector: 'app-time-write',
@@ -9,18 +9,15 @@ import { Recoder } from '../model/recoder.model';
 })
 export class TimeWriteComponent implements OnInit {
   @Input() filteredGroups: RecoderGroup[];
-  @Output() save = new EventEmitter<void>();
+  @Output() save = new EventEmitter<SaveData>();
   _TIME_TYPE:string[] = ['check', 'save'];
   constructor() { }
 
   ngOnInit() {}
 
-  onSave(event: any, recoder:Recoder, prop:string) {
+  onSave(event: any, groupIdx: number, recoderIdx: number, prop:string) {
     if (!event.keyCode) return;
-    if (event.target.value != recoder[prop]) {
-      recoder[prop] = event.target.value;
-      return;
-    }
-    this.save.emit();
+    const time = event.target.value
+    this.save.emit({groupIdx, recoderIdx, prop, time});
   }
 }

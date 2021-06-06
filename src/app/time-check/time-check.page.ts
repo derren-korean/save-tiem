@@ -5,6 +5,12 @@ import { RecoderGroup } from './model/recoder-group.model';
 import { Recoder } from './model/recoder.model';
 import { TimeCheckService } from './time-check.service';
 
+export interface SaveData {
+  groupIdx: number, 
+  recoderIdx: number, 
+  prop: string, 
+  time: string
+}
 const ACTIVE: string = "solid"
 
 @Component({
@@ -17,6 +23,8 @@ export class TimeCheckPage {
   date: string;
   isReadMode: boolean = false;
   filteredGroups: RecoderGroup[];
+  daytimeStatus: boolean = true;
+  nightTimeStatus: boolean = true;
   private emptyRecoderGroups: RecoderGroup[] = [];
   private recoderGroups: RecoderGroup[];
   constructor(private tcService: TimeCheckService) {}
@@ -33,23 +41,29 @@ export class TimeCheckPage {
   onDateChanged(event: {date: string}) {
     this.date = event.date;
     this._initRecordGroup();
+    this._filterByDayTime();
   }
 
   onDateTypeChanged(event: {isReadMode: boolean}) {
     this.isReadMode = event.isReadMode;
     this._initRecordGroup();
+    this._filterByDayTime();
   }
 
   filterGroups(button: any, isDayTime: boolean) {
     this._changeButtonState(button);
     if (isDayTime) {
-      this._filterByDayTime(button.fill == ACTIVE, button.nextElementSibling.fill == ACTIVE);
+      this.daytimeStatus = button.fill == ACTIVE;
+      this.nightTimeStatus = button.nextElementSibling.fill == ACTIVE
     } else {
-      this._filterByDayTime(button.previousElementSibling.fill == ACTIVE, button.fill == ACTIVE);
+      this.daytimeStatus = button.previousElementSibling.fill == ACTIVE;
+      this.nightTimeStatus = button.fill == ACTIVE;
     }
+    this._filterByDayTime();
   }
 
-  save() {
+  save(data: SaveData) {
+    this.filteredGroups[data.groupIdx].recoders[data.recoderIdx][data.prop] = data.time;
     this.tcService.save(this.date, this.recoderGroups);
   }
 
@@ -82,12 +96,12 @@ export class TimeCheckPage {
     button.fill = button.fill == "outline" ? "solid" : "outline"; // 하.. enum 쓰고싶다 ㅠㅠ
   }
 
-  _filterByDayTime(dayTime: boolean, nightTime: boolean) {
+  _filterByDayTime() {
     this.filteredGroups = [...this.recoderGroups];
-    if (dayTime && nightTime) {
+    if (this.daytimeStatus && this.nightTimeStatus) {
       return;
     } else {
-      let workTime = dayTime || nightTime ? dayTime : null
+      let workTime = this.daytimeStatus || this.nightTimeStatus ? this.daytimeStatus : null
       this.filteredGroups = this.recoderGroups.filter(recoder => recoder.isDayTime == workTime);
     }
   }

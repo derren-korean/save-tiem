@@ -11,13 +11,15 @@
         <ion-col size-sm="5">
           <ion-input 
             type="text" 
+            maxlength="4"
             inputmode="numeric"
             placeholder="점검시간"
+            appTimeValidator
+            id="{{_TIME_TYPE[0]}}-{{idx}}-{{recoderIdx}}"
             [(ngModel)]="recoder.savedTime"
             [appShiftFocus]="_TIME_TYPE"
-            id="{{_TIME_TYPE[0]}}-{{idx}}-{{recoderIdx}}"
             [attr.hasNext]="true"
-            (keyup)="onSave($event, recoder, 'savedTime')"
+            (keyup)="onSave($event, idx, recoderIdx, 'savedTime')"
           ></ion-input>
         </ion-col>
         <ion-col size-sm="5">
@@ -26,11 +28,12 @@
             maxlength="4"
             inputmode="numeric" 
             placeholder="저장된시간"
+            appTimeValidator
+            id="{{_TIME_TYPE[1]}}-{{idx}}-{{recoderIdx}}"
             [(ngModel)]="recoder.checkTime"
             [appShiftFocus]="_TIME_TYPE"
-            id="{{_TIME_TYPE[1]}}-{{idx}}-{{recoderIdx}}"
             [attr.hasNext]="!!group.recoders[recoderIdx+1]"
-            (keyup)="onSave($event, recoder, 'checkTime')"
+            (keyup)="onSave($event, idx, recoderIdx, 'checkTime')"
           ></ion-input>
         </ion-col>
       </ion-row>

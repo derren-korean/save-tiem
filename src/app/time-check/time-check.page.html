@@ -28,12 +28,12 @@
   <ion-list>
     <app-time-read 
       *ngIf="isReadMode;else writeComponent"
-      [filteredGroups]="filteredGroups"
-    ></app-time-read>
+      [filteredGroups]="filteredGroups">
+    </app-time-read>
     <ng-template #writeComponent>
       <app-time-write
         [filteredGroups]="filteredGroups"
-        (save)="save()"
+        (save)="save($event)"
       ></app-time-write>
     </ng-template>
   </ion-list>
