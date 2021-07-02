@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { RecoderTemplate } from '../model/recoder-template.model';
+import { StationInfo } from '../model/station-info';
 
 @Component({
   selector: 'app-template',
@@ -7,45 +9,29 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TemplateComponent implements OnInit {
 
+  location: string = "";
+  locationArray: RecoderTemplate[] = [];
   constructor() { 
-    debugger;
   }
 
-  ngOnInit() {
-    debugger;
-    console.log("탬플릿");
+  ngOnInit() {}
+
+  addLocation(location: string) {
+    if(!location || this._has(location)) {
+      this.location = "";
+      return;
+    }
+    let info: StationInfo = {isDayTime: true, station: []};
+    let temp: RecoderTemplate = new RecoderTemplate(location, info);
+    this.locationArray.push(temp);
+    this.location = "";
   }
 
+  deleteLocation(index: number) {
+    this.locationArray.splice(index, 1);
+  }
+
+  _has(location: string):boolean {
+    return !!this.locationArray.find(template => template.location === location);
+  }
 }
-
-// <ion-header>
-//   <ion-toolbar>
-//   <ion-title>
-//   ToDo App
-//   </ion-title>
-//   </ion-toolbar>
-//   </ion-header>
-//   <ion-content padding>
-//   <ion-item>
-//   <ion-input type="text" placeholder="Enter task"
-//   [(ngModel)]="taskName"></ion-input>
-  
-//   <div class="item-note" item-end>
-//   <ion-button color="primary" (click)="addTask()">
-//   <ion-icon name="add"></ion-icon>
-//   </ion-button>
-//   </div>
-//   </ion-item>
-//   <div padding>
-//   <ion-list>
-//   <ion-item *ngFor="let todo of taskList; let i = index">
-//   {{todo}}
-//   <div class="item-note" slot="end">
-//   <ion-button color="danger" clear (click)="deleteTask(i)">
-//   <ion-icon name="trash"></ion-icon>
-//   </ion-button>
-//   </div>
-//   </ion-item>
-//   </ion-list>
-//   </div>
-//   </ion-content>
