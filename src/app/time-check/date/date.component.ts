@@ -1,6 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Events } from '@ionic/angular';
-import { TimeCheckService } from '../time-check.service';
 
 @Component({
   selector: 'app-date',
