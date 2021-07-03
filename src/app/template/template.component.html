@@ -1,11 +1,11 @@
-<ion-header>
+<ion-header [translucent]="true">
   <ion-toolbar>
   <ion-title>
   장소 입력 템플릿
   </ion-title>
   </ion-toolbar>
 </ion-header>
-<ion-content class="ion-padding">
+<ion-content class="ion-padding" [fullscreen]="true">
   <ion-item>
     <ion-input type="text" placeholder="장소(ex: 국제선)" [(ngModel)]="location"></ion-input>
     <div class="item-note" item-end>
@@ -29,7 +29,7 @@
           <ion-item>수량: {{template.info.station.length}}, {{template.info.isDayTime | dayTime}}점검</ion-item>
           <ion-item >
             <ion-label>수정하기</ion-label>
-            <ion-button color="success" slot="end" (click)="editLocation(location)">
+            <ion-button color="success" slot="end" (click)="presentModal(template.location)">
               <ion-icon name="arrow-forward"></ion-icon>
             </ion-button>
           </ion-item>

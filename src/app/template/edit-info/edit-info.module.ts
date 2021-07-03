@@ -6,11 +6,10 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { EditInfoPage } from './edit-info.page';
-import { DayTimePipe } from '../day-time.pipe';
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'edit-info',
     component: EditInfoPage
   }
 ];
@@ -22,6 +21,7 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [EditInfoPage, DayTimePipe]
+  declarations: [EditInfoPage],
+  exports: [EditInfoPage]
 })
 export class EditInfoPageModule {}

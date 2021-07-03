@@ -5,14 +5,12 @@ import { RouterModule, Routes } from '@angular/router';
 import { TemplateComponent } from './template.component';
 import { FormsModule } from '@angular/forms';
 import { DayTimePipe } from './day-time.pipe';
+import { EditInfoPageModule } from './edit-info/edit-info.module';
 
 const routes: Routes = [
   {
     path: '',
-    component: TemplateComponent,
-    // children: [
-    //   { path: 'edit-info', loadChildren: './template/edit-info/edit-info.module#EditInfoPageModule' },
-    // ]
+    component: TemplateComponent
   }
 ];
 
@@ -21,6 +19,7 @@ const routes: Routes = [
     CommonModule,
     IonicModule,
     FormsModule,
+    EditInfoPageModule,
     RouterModule.forChild(routes)
   ],
   declarations: [TemplateComponent, DayTimePipe]

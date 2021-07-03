@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 import { RecoderTemplate } from '../model/recoder-template.model';
 import { StationInfo } from '../model/station-info';
+import { EditInfoPage } from './edit-info/edit-info.page';
 
 @Component({
   selector: 'app-template',
@@ -11,7 +13,7 @@ export class TemplateComponent implements OnInit {
 
   location: string = "";
   locationArray: RecoderTemplate[] = [];
-  constructor() { 
+  constructor(public modalController: ModalController) { 
   }
 
   ngOnInit() {}
@@ -34,4 +36,22 @@ export class TemplateComponent implements OnInit {
   _has(location: string):boolean {
     return !!this.locationArray.find(template => template.location === location);
   }
+  
+  async presentModal(location: string) {
+    const modal = await this.modalController.create({
+      component: EditInfoPage,
+      componentProps: {
+        'recoderTemplate': this.locationArray.find(template => template.location === location),
+      }
+    });
+
+    modal.onDidDismiss().then((res:any) => {
+      if (res !== null) {
+        console.log('Modal Sent Data : '+ res.data);
+      }
+    });
+
+    return await modal.present();
+  }
+
 }

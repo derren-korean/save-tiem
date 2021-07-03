@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { StationInfo } from 'src/app/model/station-info';
+import { ModalController } from '@ionic/angular';
+import { RecoderTemplate } from 'src/app/model/recoder-template.model';
 
 @Component({
   selector: 'app-edit-info',
@@ -7,26 +8,27 @@ import { StationInfo } from 'src/app/model/station-info';
   styleUrls: ['./edit-info.page.scss'],
 })
 export class EditInfoPage implements OnInit {
-  // todo: input으로 변경
-  // page(navigation)방식으로 할지, component로 펼치기 식으로 할지 정하기
+  
+  @Input() recoderTemplate: RecoderTemplate;
   postfix: string = "";
-  location: string = "foo";
-  stationInfo: StationInfo = {station: [], isDayTime: true}
-  constructor() { }
+  constructor(public modalController: ModalController) { }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   addStation() {
     let tempName:string = '';
     if (!!this.postfix) {
-      tempName += this.stationInfo.station.length+1 + this.postfix;
+      tempName += this.recoderTemplate.info.station.length+1 + this.postfix;
     }
-    this.stationInfo.station.push(tempName);
+    this.recoderTemplate.info.station.push(tempName);
   }
 
   deleteStation(index: number) {
-    this.stationInfo.station.splice(index, 1);
+    this.recoderTemplate.info.station.splice(index, 1);
+  }
+
+  closeModal() {
+    this.modalController.dismiss();
   }
 
 }
