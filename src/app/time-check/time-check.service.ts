@@ -1,5 +1,5 @@
 import { Injectable} from '@angular/core';
-import { StationInfo } from './model/station-info';
+import { StationInfo } from 'src/app/model/station-info';
 import { RecoderGroup } from './model/recoder-group.model';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
