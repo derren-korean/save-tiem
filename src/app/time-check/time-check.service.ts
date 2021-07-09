@@ -19,6 +19,7 @@ interface InnerData {
 })
 export class TimeCheckService {
 
+  private date: string = '';
   private _dataURL = '../../assets/data.json';
   private recoders:RecoderGroup[] = [];
   private _firstTime = true;
@@ -53,5 +54,13 @@ export class TimeCheckService {
 
   fatchDates(yyyyMMdd: string) :RecoderGroup[] {
     return JSON.parse(window.localStorage.getItem(yyyyMMdd));
+  }
+
+  fetchDate() {
+    return this.date;
+  }
+
+  setDate(date: string) {
+    this.date = date;
   }
 }

@@ -5,10 +5,7 @@
 </ion-header>
  
 <ion-content>
-  <app-date 
-  (changeDate)="onDateChanged($event)"
-  (changeDateType)="onDateTypeChanged($event)">
-  </app-date>
+  <app-date (changeDate)="onDateChanged($event)"></app-date>
   <ion-item>
     <span class="ion-padding-start">
       <ion-button 
@@ -26,15 +23,9 @@
     </span>
   </ion-item>
   <ion-list>
-    <app-time-read 
-      *ngIf="isReadMode;else writeComponent"
-      [filteredGroups]="filteredGroups">
-    </app-time-read>
-    <ng-template #writeComponent>
-      <app-time-write
+    <app-time-write
         [filteredGroups]="filteredGroups"
         (save)="save($event)"
       ></app-time-write>
-    </ng-template>
   </ion-list>
 </ion-content>

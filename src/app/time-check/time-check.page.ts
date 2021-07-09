@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { IonButton } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 
 import { RecoderGroup } from './model/recoder-group.model';
-import { Recoder } from './model/recoder.model';
 import { TimeCheckService } from './time-check.service';
 
 export interface SaveData {
@@ -21,31 +21,32 @@ const ACTIVE: string = "solid"
 
 export class TimeCheckPage {
   date: string;
-  isReadMode: boolean = false;
   filteredGroups: RecoderGroup[];
   daytimeStatus: boolean = true;
   nightTimeStatus: boolean = true;
+  private _someListener: Subscription = new Subscription();
   private emptyRecoderGroups: RecoderGroup[] = [];
   private recoderGroups: RecoderGroup[];
   constructor(private tcService: TimeCheckService) {}
 
   ionViewDidEnter() {
     const _temp: RecoderGroup[] = this._fetch(this.date);
-    this.tcService.fetchRecoders().subscribe(recoders => {
-      this.emptyRecoderGroups = [...recoders];
-      recoders = _temp ? _temp : recoders;
-      this._setRecoders([...recoders]);
-    });
+    this._someListener.add(
+      this.tcService.fetchRecoders().subscribe(recoders => {
+        this.emptyRecoderGroups = [...recoders];
+        recoders = _temp ? _temp : recoders;
+        this._setRecoders([...recoders]);
+      })
+    );
+  }
+
+  ionViewWillLeave() {
+    this._someListener.unsubscribe();
   }
 
   onDateChanged(event: {date: string}) {
     this.date = event.date;
-    this._initRecordGroup();
-    this._filterByDayTime();
-  }
-
-  onDateTypeChanged(event: {isReadMode: boolean}) {
-    this.isReadMode = event.isReadMode;
+    this.tcService.setDate(this.date);
     this._initRecordGroup();
     this._filterByDayTime();
   }
@@ -70,15 +71,6 @@ export class TimeCheckPage {
   _initRecordGroup() {
     let _temp: RecoderGroup[] = this._fetch(this.date);
     _temp = _temp ? _temp : this._emptyRecorders();
-    if (this.isReadMode) { 
-      let __has = (a: string): boolean => !!a
-      let _has = (recoder: Recoder): boolean => __has(recoder.checkTime) || __has(recoder.savedTime);
-
-      _temp = _temp.filter(group => {
-        group.recoders = group.recoders.filter(recorder => _has(recorder));
-        return group.recoders.length > 0;
-      });
-    }
     this._setRecoders([..._temp]);
   }
 
