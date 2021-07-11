@@ -1,0 +1,47 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons>
+      <ion-button [disabled]="!locationArray.length" slot="start" color="danger" (click)="saveTemplate()">저장</ion-button>
+    </ion-buttons>
+  <ion-title>
+  장소 입력 템플릿
+  </ion-title>
+  </ion-toolbar>
+
+</ion-header>
+<ion-content class="ion-padding" [fullscreen]="true">
+  <ion-item *ngIf="errOnLocationName">
+    <ion-note color="danger" slot="end">{{locationAlarm}}</ion-note>
+  </ion-item>
+  <ion-item>
+    <ion-input type="text" placeholder="장소(ex: 국제선)" [(ngModel)]="location" (ionChange)="onLocationChanged(location)"></ion-input>
+    <div class="item-note" item-end>
+      <ion-button color="primary" (click)="addLocation(location)">
+        <ion-icon name="add"></ion-icon>
+      </ion-button>
+    </div>
+  </ion-item>
+  <div class="ion-padding">
+    <ion-list>
+      <ion-card *ngFor="let template of locationArray; let i = index">
+        <ion-card-header>
+          <ion-item>
+            <ion-card-title>{{template.location}}</ion-card-title>
+            <ion-button color="danger" slot="end" clear (click)="deleteLocation(i)">
+              <ion-icon name="trash"></ion-icon>
+            </ion-button>
+          </ion-item>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-item>수량: {{template.info.station.length}}, {{template.info.isDayTime | dayTime}}점검</ion-item>
+          <ion-item >
+            <ion-label>수정하기</ion-label>
+            <ion-button color="success" slot="end" (click)="presentModal(template.location)">
+              <ion-icon name="arrow-forward"></ion-icon>
+            </ion-button>
+          </ion-item>
+        </ion-card-content>
+      </ion-card>
+    </ion-list>
+  </div>
+</ion-content>

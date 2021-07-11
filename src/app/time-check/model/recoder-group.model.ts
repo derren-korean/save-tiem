@@ -1,11 +1,10 @@
 import { Recoder } from './recoder.model';
-import { StationInfo } from './station-info';
+import { StationInfo } from 'src/app/model/station-info';
 
 export class RecoderGroup {
-  location: string;
-  isDayTime: boolean;
   recoders: Recoder[];
-  private info: StationInfo;
+  isDayTime: boolean;
+  location: string;
 
   constructor(location: string, info: StationInfo) { 
     this.location = location;
