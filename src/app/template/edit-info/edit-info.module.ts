@@ -6,6 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { EditInfoPage } from './edit-info.page';
+import { DayTimePipeModule } from '../day-time-pipe/day-time.pipe.module';
 
 const routes: Routes = [
   {
@@ -19,6 +20,7 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule,
+    DayTimePipeModule,
     RouterModule.forChild(routes)
   ],
   declarations: [EditInfoPage],

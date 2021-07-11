@@ -1,13 +1,20 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
+    <ion-buttons>
+      <ion-button [disabled]="!locationArray.length" slot="start" color="danger" (click)="saveTemplate()">저장</ion-button>
+    </ion-buttons>
   <ion-title>
   장소 입력 템플릿
   </ion-title>
   </ion-toolbar>
+
 </ion-header>
 <ion-content class="ion-padding" [fullscreen]="true">
+  <ion-item *ngIf="errOnLocationName">
+    <ion-note color="danger" slot="end">{{locationAlarm}}</ion-note>
+  </ion-item>
   <ion-item>
-    <ion-input type="text" placeholder="장소(ex: 국제선)" [(ngModel)]="location"></ion-input>
+    <ion-input type="text" placeholder="장소(ex: 국제선)" [(ngModel)]="location" (ionChange)="onLocationChanged(location)"></ion-input>
     <div class="item-note" item-end>
       <ion-button color="primary" (click)="addLocation(location)">
         <ion-icon name="add"></ion-icon>
