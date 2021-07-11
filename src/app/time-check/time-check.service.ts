@@ -3,7 +3,7 @@ import { StationInfo } from 'src/app/model/station-info';
 import { RecoderGroup } from './model/recoder-group.model';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
-import { Events } from '@ionic/angular';
+import { RecoderTemplate } from '../model/recoder-template.model';
 
 interface JsonData {
   data: InnerData[];
@@ -19,11 +19,11 @@ interface InnerData {
 })
 export class TimeCheckService {
 
+  private date: string = '';
   private _dataURL = '../../assets/data.json';
   private recoders:RecoderGroup[] = [];
-  private _firstTime = true;
 
-  constructor(private http: HttpClient, public events: Events) {}
+  constructor(private http: HttpClient) {}
 
   fetchRecoders() {
     return this.http
@@ -45,13 +45,24 @@ export class TimeCheckService {
 
   save(yyyyMMdd: string, recoders: RecoderGroup[]) {
     window.localStorage.setItem(yyyyMMdd, JSON.stringify(recoders));
-    if (this._firstTime) { //엄청 마음에 안드는 방법인데 ㅠㅠ 이것밖에 방법이 없댜;;;
-      this._firstTime = false;
-      this.events.publish('savedTime:updated');
-    }
+  }
+
+  saveTemplate(recoders: RecoderTemplate[]) {
+    window.localStorage.setItem(
+      'save-time-template', 
+      JSON.stringify(recoders)
+    );
   }
 
   fatchDates(yyyyMMdd: string) :RecoderGroup[] {
     return JSON.parse(window.localStorage.getItem(yyyyMMdd));
+  }
+
+  fetchDate() {
+    return this.date;
+  }
+
+  setDate(date: string) {
+    this.date = date;
   }
 }

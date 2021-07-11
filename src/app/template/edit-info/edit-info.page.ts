@@ -10,25 +10,41 @@ import { RecoderTemplate } from 'src/app/model/recoder-template.model';
 export class EditInfoPage implements OnInit {
   
   @Input() recoderTemplate: RecoderTemplate;
-  postfix: string = "";
+  private stationDummy: string[] = []; //버그가 있어서 close할때 recoderTemplate에 넣어야함
   constructor(public modalController: ModalController) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.stationDummy = [...this.recoderTemplate.info.station];
+  }
 
   addStation() {
     let tempName:string = '';
-    if (!!this.postfix) {
-      tempName += this.recoderTemplate.info.station.length+1 + this.postfix;
+    if (!!this.recoderTemplate.info.postfix) {
+      tempName += this.recoderTemplate.info.station.length+1 + this.recoderTemplate.info.postfix;
     }
     this.recoderTemplate.info.station.push(tempName);
+    this.stationDummy.push(tempName);
   }
 
   deleteStation(index: number) {
     this.recoderTemplate.info.station.splice(index, 1);
+    this.stationDummy.splice(index, 1);
+  }
+
+  updateStation(index: number, event:any) {
+    this.stationDummy[index] = event.target.firstElementChild.value;
   }
 
   closeModal() {
+    this.recoderTemplate.info.station = [...this.stationDummy];
+    if (this._isEmpty(this.recoderTemplate.info.station)) {
+      return;
+    }
     this.modalController.dismiss();
+  }
+
+  _isEmpty(station: string[]) {
+    return !station.every(station=>!!station)
   }
 
 }
