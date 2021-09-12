@@ -1,5 +1,4 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { Events } from '@ionic/angular';
 import { DateFormatterSingleton } from 'src/app/model/date-formatter';
 
 @Component({
@@ -11,7 +10,7 @@ export class DateComponent implements OnInit {
   @Output() changeDate = new EventEmitter<{date: string}>();
   datePicker: string = DateFormatterSingleton.nowYYYYmmDD(); // ion-datetime와 bind하기위한 format
 
-  constructor(public events: Events) { }
+  constructor() { }
 
   ngOnInit() {
     this._emitDateChaged();

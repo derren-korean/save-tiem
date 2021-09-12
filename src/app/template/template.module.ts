@@ -6,6 +6,7 @@ import { TemplateComponent } from './template.component';
 import { FormsModule } from '@angular/forms';
 import { EditInfoPageModule } from './edit-info/edit-info.module';
 import { DayTimePipeModule } from './day-time-pipe/day-time.pipe.module';
+import { AddTemplateComponent } from './add-template/add-template.component';
 
 const routes: Routes = [
   {
@@ -23,6 +24,6 @@ const routes: Routes = [
     DayTimePipeModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [TemplateComponent]
+  declarations: [TemplateComponent, AddTemplateComponent]
 })
 export class TemplateModule { }

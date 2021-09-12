@@ -14,50 +14,28 @@ import { EditInfoPage } from './edit-info/edit-info.page';
 })
 export class TemplateComponent implements OnInit {
 
-  location: string = "";
-  locationArray: RecoderTemplate[] = [];
-  errOnLocationName: boolean = false;
-  locationAlarm: string = "장소가 비어있습니다. 글자를 입력해주세요.";
+  templateArray: RecoderTemplate[] = [];
   constructor(public modalController: ModalController, private dao: TimeCheckService) { }
 
   ngOnInit() {
-    this.locationArray = this.dao.fatchTemplate();
+    this.templateArray = this.dao.fatchTemplate();
     this.dao.fetchRecoders().subscribe(recoders => {
-      if (!this.locationArray || !this.locationArray.length) {
-        this.locationArray = this.toTemplate(recoders);
+      if (!this.templateArray || !this.templateArray.length) {
+        this.templateArray = this.toTemplate(recoders);
       }
     })
   }
 
-  onLocationChanged(location: string) {
-    if(!!location) {
-      this.errOnLocationName = false;
-    }
-  }
-
-  addLocation(location: string, index: number) {
-    if(!location || this._has(location)) {
-      this.locationAlarm = this._has(location) ? "동일한 장소가 존재합니다." : "장소가 비어있습니다. 글자를 입력해주세요.";
-      this.location = "";
-      this.errOnLocationName = true;
-      return;
-    }
-    let info: StationInfo = {isDayTime: true, station: []};
-    let temp: RecoderTemplate = new RecoderTemplate(location, info);
-    this.locationArray.splice(index, 0, temp);
-    this.location = "";
+  onAddLocation(event:{template: RecoderTemplate, index: number}) {
+    this.templateArray.splice(event.index, 0, event.template);
   }
 
   deleteLocation(index: number) {
-    this.locationArray.splice(index, 1);
+    this.templateArray.splice(index, 1);
   }
 
   saveTemplate() {
-    this.dao.saveTemplate(this.locationArray);
-  }
-
-  _has(location: string):boolean {
-    return !!this.locationArray.find(template => template.location === location);
+    this.dao.saveTemplate(this.templateArray);
   }
 
   toTemplate(recoders: RecoderGroup[]): RecoderTemplate[] {
@@ -75,12 +53,16 @@ export class TemplateComponent implements OnInit {
   _toStationArray(recoders: Recoder[]) {
     return recoders.map(recoder => recoder.station);
   }
+
+  getLocations():string[] {
+    return this.templateArray.map(template=>template.location);
+  }
   
   async presentModal(location: string) {
     const modal = await this.modalController.create({
       component: EditInfoPage,
       componentProps: {
-        'recoderTemplate': this.locationArray.find(template => template.location === location),
+        'recoderTemplate': this.templateArray.find(template => template.location === location),
       }
     });
     return await modal.present();

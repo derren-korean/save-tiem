@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons>
-      <ion-button [disabled]="!locationArray.length" slot="start" color="danger" (click)="saveTemplate()">저장</ion-button>
+      <ion-button [disabled]="!templateArray.length" slot="start" color="danger" (click)="saveTemplate()">저장</ion-button>
     </ion-buttons>
   <ion-title>
   장소 입력 템플릿
@@ -10,20 +10,14 @@
 
 </ion-header>
 <ion-content class="ion-padding" [fullscreen]="true">
-  <ion-item *ngIf="errOnLocationName">
-    <ion-note color="danger" slot="end">{{locationAlarm}}</ion-note>
-  </ion-item>
-  <ion-item>
-    <ion-input type="text" placeholder="장소(ex: 국제선)" [(ngModel)]="location" (ionChange)="onLocationChanged(location)"></ion-input>
-    <div class="item-note" item-end>
-      <ion-button color="primary" (click)="addLocation(location, 0)">
-        <ion-icon name="add"></ion-icon>
-      </ion-button>
-    </div>
-  </ion-item>
+  <app-add-template 
+    index=0
+    [locations]="getLocations()"
+    (newLocation)="onAddLocation($event)">
+  </app-add-template>
   <div class="ion-padding">
     <ion-list>
-      <div *ngFor="let template of locationArray; let i = index">
+      <div *ngFor="let template of templateArray; let i = index">
         <ion-card>
           <ion-card-header>
             <ion-item>
@@ -44,14 +38,11 @@
             </ion-item>
           </ion-card-content>
         </ion-card>
-        <ion-item>
-          <ion-input type="text" placeholder="장소(ex: 국제선)" [(ngModel)]="location" (ionChange)="onLocationChanged(location)"></ion-input>
-          <div class="item-note" item-end>
-            <ion-button color="primary" (click)="addLocation(location, i+1)">
-              <ion-icon name="add"></ion-icon>
-            </ion-button>
-          </div>
-        </ion-item>
+        <app-add-template 
+          [index]="i+1"
+          [locations]="getLocations()"
+          (newLocation)="onAddLocation($event)">
+        </app-add-template>
       </div>
     </ion-list>
   </div>

@@ -1,0 +1,13 @@
+<div>
+  <ion-item>
+    <ion-input type="text" placeholder="장소(ex: 국제선)" [(ngModel)]="location" (ionChange)="onLocationChanged(location)"></ion-input>
+    <div class="item-note" item-end>
+      <ion-button color="primary" (click)="addLocation(location, index)">
+        <ion-icon name="add"></ion-icon>
+      </ion-button>
+    </div>
+  </ion-item>
+  <ion-item *ngIf="errOnLocationName">
+    <ion-note color="danger" slot="end">{{locationAlarm}}</ion-note>
+  </ion-item>
+</div>
