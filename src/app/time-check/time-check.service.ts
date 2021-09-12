@@ -54,6 +54,12 @@ export class TimeCheckService {
     );
   }
 
+  fatchTemplate(): RecoderTemplate[] {
+    let _temp: RecoderTemplate[];
+    _temp = JSON.parse(window.localStorage.getItem('save-time-template'));
+    return _temp ? _temp : [];
+  }
+
   fatchDates(yyyyMMdd: string) :RecoderGroup[] {
     return JSON.parse(window.localStorage.getItem(yyyyMMdd));
   }

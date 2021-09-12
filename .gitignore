@@ -102,3 +102,5 @@ plugins
 *.swo
 *.log
 *.DS_Store
+
+android/

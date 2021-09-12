@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { RecoderTemplate } from '../model/recoder-template.model';
 import { StationInfo } from '../model/station-info';
+import { RecoderGroup } from '../time-check/model/recoder-group.model';
+import { Recoder } from '../time-check/model/recoder.model';
 import { TimeCheckService } from '../time-check/time-check.service';
 import { EditInfoPage } from './edit-info/edit-info.page';
 
@@ -16,9 +18,16 @@ export class TemplateComponent implements OnInit {
   locationArray: RecoderTemplate[] = [];
   errOnLocationName: boolean = false;
   locationAlarm: string = "장소가 비어있습니다. 글자를 입력해주세요.";
-  constructor(public modalController: ModalController, private saveService: TimeCheckService) { }
+  constructor(public modalController: ModalController, private dao: TimeCheckService) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.locationArray = this.dao.fatchTemplate();
+    this.dao.fetchRecoders().subscribe(recoders => {
+      if (!this.locationArray || !this.locationArray.length) {
+        this.locationArray = this.toTemplate(recoders);
+      }
+    })
+  }
 
   onLocationChanged(location: string) {
     if(!!location) {
@@ -44,11 +53,27 @@ export class TemplateComponent implements OnInit {
   }
 
   saveTemplate() {
-    this.saveService.saveTemplate(this.locationArray);
+    this.dao.saveTemplate(this.locationArray);
   }
 
   _has(location: string):boolean {
     return !!this.locationArray.find(template => template.location === location);
+  }
+
+  toTemplate(recoders: RecoderGroup[]): RecoderTemplate[] {
+    if (!recoders || !recoders.length) { 
+      return [];
+    }
+    let temp = [];
+    recoders.forEach(recoder => {
+      let info: StationInfo = {isDayTime: recoder.isDayTime, station: this._toStationArray(recoder.recoders)};
+      temp.push(new RecoderTemplate(recoder.location, info));
+    })
+    return temp;
+  }
+
+  _toStationArray(recoders: Recoder[]) {
+    return recoders.map(recoder => recoder.station);
   }
   
   async presentModal(location: string) {
