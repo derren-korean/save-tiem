@@ -16,34 +16,43 @@
   <ion-item>
     <ion-input type="text" placeholder="장소(ex: 국제선)" [(ngModel)]="location" (ionChange)="onLocationChanged(location)"></ion-input>
     <div class="item-note" item-end>
-      <ion-button color="primary" (click)="addLocation(location)">
+      <ion-button color="primary" (click)="addLocation(location, 0)">
         <ion-icon name="add"></ion-icon>
       </ion-button>
     </div>
   </ion-item>
   <div class="ion-padding">
     <ion-list>
-      <ion-card *ngFor="let template of locationArray; let i = index">
-        <ion-card-header>
-          <ion-item>
-            <ion-card-title>{{template.location}}</ion-card-title>
-            <ion-icon></ion-icon>
-            <ion-label [color]="template.info.isDayTime ? 'success' : 'medium'">{{template.info.isDayTime | dayTime}}점검</ion-label>
-            <ion-button color="danger" slot="end" clear (click)="deleteLocation(i)">
-              <ion-icon name="trash"></ion-icon>
+      <div *ngFor="let template of locationArray; let i = index">
+        <ion-card>
+          <ion-card-header>
+            <ion-item>
+              <ion-card-title>{{template.location}}</ion-card-title>
+              <ion-icon></ion-icon>
+              <ion-label [color]="template.info.isDayTime ? 'success' : 'medium'">{{template.info.isDayTime | dayTime}}점검</ion-label>
+              <ion-button color="danger" slot="end" clear (click)="deleteLocation(i)">
+                <ion-icon name="trash"></ion-icon>
+              </ion-button>
+            </ion-item>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-item>수량: {{template.info.station.length}}</ion-item>
+            <ion-item>
+              <ion-button color="success" slot="start" (click)="presentModal(template.location)">
+                <ion-label>수정하기</ion-label>
+              </ion-button>
+            </ion-item>
+          </ion-card-content>
+        </ion-card>
+        <ion-item>
+          <ion-input type="text" placeholder="장소(ex: 국제선)" [(ngModel)]="location" (ionChange)="onLocationChanged(location)"></ion-input>
+          <div class="item-note" item-end>
+            <ion-button color="primary" (click)="addLocation(location, i+1)">
+              <ion-icon name="add"></ion-icon>
             </ion-button>
-          </ion-item>
-        </ion-card-header>
-        <ion-card-content>
-          <ion-item>수량: {{template.info.station.length}}</ion-item>
-          <ion-item>
-            <ion-label>수정하기</ion-label>
-            <ion-button color="success" slot="end" (click)="presentModal(template.location)">
-              <ion-icon name="arrow-forward"></ion-icon>
-            </ion-button>
-          </ion-item>
-        </ion-card-content>
-      </ion-card>
+          </div>
+        </ion-item>
+      </div>
     </ion-list>
   </div>
 </ion-content>

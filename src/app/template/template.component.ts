@@ -35,7 +35,7 @@ export class TemplateComponent implements OnInit {
     }
   }
 
-  addLocation(location: string) {
+  addLocation(location: string, index: number) {
     if(!location || this._has(location)) {
       this.locationAlarm = this._has(location) ? "동일한 장소가 존재합니다." : "장소가 비어있습니다. 글자를 입력해주세요.";
       this.location = "";
@@ -44,7 +44,7 @@ export class TemplateComponent implements OnInit {
     }
     let info: StationInfo = {isDayTime: true, station: []};
     let temp: RecoderTemplate = new RecoderTemplate(location, info);
-    this.locationArray.push(temp);
+    this.locationArray.splice(index, 0, temp);
     this.location = "";
   }
 
