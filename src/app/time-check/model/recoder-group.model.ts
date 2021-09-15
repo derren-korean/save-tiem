@@ -5,6 +5,7 @@ export class RecoderGroup {
   recoders: Recoder[];
   isDayTime: boolean;
   location: string;
+  hasFilledRecord: boolean;
 
   constructor(location: string, info: StationInfo) { 
     this.location = location;

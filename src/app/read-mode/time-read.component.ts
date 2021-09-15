@@ -6,6 +6,7 @@ import { RecoderGroup } from '../time-check/model/recoder-group.model';
 import { Recoder } from '../time-check/model/recoder.model';
 import { TimeCheckService } from '../time-check/time-check.service';
 
+const filledRecord = (recoder:Recoder) => !!recoder.checkTime || !!recoder.savedTime;
 
 @Component({
   selector: 'app-time-read',
@@ -24,8 +25,9 @@ export class TimeReadComponent {
     this.datePicker = this.tcService.fetchDate();
     if (!this.datePicker) {
       this.onChangeDate();
+    } else {
+      this._initRecordGroup();
     }
-    this._initRecordGroup();
   }
 
   ionViewWillLeave() {
@@ -33,13 +35,13 @@ export class TimeReadComponent {
   }
 
   onChangeDate() {
-    if (this.savedDates.length > -1) {
+    if (this.savedDates.length) {
       this.datePicker = DateFormatterSingleton.toYYYYmmDD(this.datePicker);
       if (!this.savedDates.find(date => date == this.datePicker)) {
         this.datePicker = this.savedDates[0]
       }
+      this._initRecordGroup();
     }
-    this._initRecordGroup();
   }
 
   _initSavedDates() {
@@ -51,13 +53,10 @@ export class TimeReadComponent {
   }
 
   _initRecordGroup() {
-    let _temp: RecoderGroup[] = this.tcService.fatchDates(this.datePicker);
-      let __has = (a: string): boolean => !!a
-      let _has = (recoder: Recoder): boolean => __has(recoder.checkTime) || __has(recoder.savedTime);
-      _temp = _temp.filter(group => {
-        group.recoders = group.recoders.filter(recorder => _has(recorder));
-        return group.recoders.length > 0;
-      });
-      this.recoderGroups = [..._temp];
+    let _temp: RecoderGroup[] = this.tcService.fatchDates(this.datePicker)
+      .filter(group => {group.hasFilledRecord})
+      .filter(group => group.recoders = group.recoders.filter(filledRecord));
+    this.recoderGroups = [..._temp];
   }
+
 }

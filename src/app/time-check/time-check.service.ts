@@ -21,7 +21,7 @@ export class TimeCheckService {
 
   private date: string = '';
   private _dataURL = '../../assets/data.json';
-  private recoders:RecoderGroup[] = [];
+  private recoderGroups:RecoderGroup[] = [];
 
   constructor(private http: HttpClient) {}
 
@@ -33,14 +33,14 @@ export class TimeCheckService {
         res.data.forEach((_data)=> {
           this._setGroupMap(_data.location, _data.info);
         });
-        return [...this.recoders];
+        return [...this.recoderGroups];
       })
     );
   }
 
   _setGroupMap(location: string, info: StationInfo) {
     if (!info.station.length) return
-    this.recoders.push(new RecoderGroup(location, info));
+    this.recoderGroups.push(new RecoderGroup(location, info));
   }
 
   save(yyyyMMdd: string, recoders: RecoderGroup[]) {

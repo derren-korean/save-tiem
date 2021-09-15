@@ -3,7 +3,10 @@ import { IonButton } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
 import { RecoderGroup } from './model/recoder-group.model';
+import { Recoder } from './model/recoder.model';
 import { TimeCheckService } from './time-check.service';
+
+const filledRecord = (recoder:Recoder) => !!recoder.checkTime || !!recoder.savedTime;
 
 export interface SaveData {
   groupIdx: number, 
@@ -32,10 +35,10 @@ export class TimeCheckPage {
   ionViewDidEnter() {
     const _temp: RecoderGroup[] = this._fetch(this.date);
     this._someListener.add(
-      this.tcService.fetchRecoders().subscribe(recoders => {
-        this.emptyRecoderGroups = [...recoders];
-        recoders = _temp ? _temp : recoders;
-        this._setRecoders([...recoders]);
+      this.tcService.fetchRecoders().subscribe(recoderGroups => {
+        this.emptyRecoderGroups = [...recoderGroups];
+        recoderGroups = _temp ? _temp : recoderGroups;
+        this._setRecoders([...recoderGroups]);
       })
     );
   }
@@ -65,6 +68,7 @@ export class TimeCheckPage {
 
   save(data: SaveData) {
     this.filteredGroups[data.groupIdx].recoders[data.recoderIdx][data.prop] = data.time;
+    this.filteredGroups[data.groupIdx].hasFilledRecord = this.filteredGroups[data.groupIdx].recoders.some(filledRecord);
     this.tcService.save(this.date, this.recoderGroups);
   }
 
@@ -92,10 +96,9 @@ export class TimeCheckPage {
     this.filteredGroups = [...this.recoderGroups];
     if (this.daytimeStatus && this.nightTimeStatus) {
       return;
-    } else {
-      let workTime = this.daytimeStatus || this.nightTimeStatus ? this.daytimeStatus : null
-      this.filteredGroups = this.recoderGroups.filter(recoder => recoder.isDayTime == workTime);
-    }
+    } 
+    let workTime = this.daytimeStatus || this.nightTimeStatus ? this.daytimeStatus : null
+    this.filteredGroups = this.recoderGroups.filter(recoder => recoder.isDayTime == workTime);
   }
 
   _fetch(yyyyMMdd: string): RecoderGroup[] {
