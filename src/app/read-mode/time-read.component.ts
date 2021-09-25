@@ -47,15 +47,22 @@ export class TimeReadComponent {
   _initSavedDates() {
     this.savedDates = [];
     for(var i =0; i < localStorage.length; i++) {
+      if (localStorage.key(i).charAt(0) == 's') {
+        continue;
+      }
       this.savedDates.push(localStorage.key(i))
     }
     this.savedDates.sort().reverse();
   }
 
   _initRecordGroup() {
-    let _temp: RecoderGroup[] = this.tcService.fatchDates(this.datePicker)
-      .filter(group => {group.hasFilledRecord})
+    let _temp: RecoderGroup[] = this.tcService.fatchDates(this.datePicker);
+    if (_temp instanceof Array) {
+      _temp = _temp.filter(group => group.hasFilledRecord)
       .filter(group => group.recoders = group.recoders.filter(filledRecord));
+    } else {
+      _temp = [];
+    }
     this.recoderGroups = [..._temp];
   }
 
