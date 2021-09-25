@@ -14,7 +14,7 @@ const filledRecord = (recoder:Recoder) => !!recoder.checkTime || !!recoder.saved
   styleUrls: ['./time-read.component.scss'],
 })
 export class TimeReadComponent {
-  recoderGroups: RecoderGroup[];
+  recoderGroups: RecoderGroup[] = [];
   datePicker: string;
   savedDates: string[];
   private _someListener: Subscription = new Subscription();
