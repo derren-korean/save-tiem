@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonButton } from '@ionic/angular';
 import { Subscription } from 'rxjs';
+import { RecoderTemplate } from '../model/recoder-template.model';
 
 import { RecoderGroup } from './model/recoder-group.model';
 import { Recoder } from './model/recoder.model';
@@ -27,24 +28,21 @@ export class TimeCheckPage {
   filteredGroups: RecoderGroup[];
   daytimeStatus: boolean = true;
   nightTimeStatus: boolean = true;
-  private _someListener: Subscription = new Subscription();
   private emptyRecoderGroups: RecoderGroup[] = [];
   private recoderGroups: RecoderGroup[];
   constructor(private tcService: TimeCheckService) {}
 
   ionViewDidEnter() {
-    const _temp: RecoderGroup[] = this._fetch(this.date);
-    this._someListener.add(
-      this.tcService.fetchRecoders().subscribe(recoderGroups => {
-        this.emptyRecoderGroups = [...recoderGroups];
-        recoderGroups = _temp ? _temp : recoderGroups;
-        this._setRecoders([...recoderGroups]);
-      })
-    );
-  }
-
-  ionViewWillLeave() {
-    this._someListener.unsubscribe();
+    let _temp: RecoderGroup[] = this._fetch(this.date);
+    this.tcService.fetchRecoders().subscribe(httpRecoders => {
+      if (!_temp || !_temp.length) {
+        let templates: RecoderTemplate[] = this.tcService.fatchTemplate();
+        _temp = this.tcService.toRecoders(templates);
+        _temp = _temp ? _temp : httpRecoders;
+      }
+      this.emptyRecoderGroups = [..._temp];
+      this._setRecoders([..._temp]);
+    })
   }
 
   onDateChanged(event: {date: string}) {

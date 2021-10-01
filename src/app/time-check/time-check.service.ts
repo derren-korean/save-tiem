@@ -30,12 +30,16 @@ export class TimeCheckService {
     .get<JsonData>(this._dataURL)
     .pipe(
       map(res => {
-        res.data.forEach((_data)=> {
-          this._setGroupMap(_data.location, _data.info);
-        });
+        res.data.forEach((_data)=> this._setGroupMap(_data.location, _data.info));
         return [...this.recoderGroups];
       })
     );
+  }
+
+  toRecoders(templates: RecoderTemplate[]) {
+    this.recoderGroups = [];
+    templates.forEach(template => this._setGroupMap(template.location, template.info));
+    return this.recoderGroups;
   }
 
   _setGroupMap(location: string, info: StationInfo) {
