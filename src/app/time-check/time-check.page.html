@@ -6,22 +6,7 @@
  
 <ion-content>
   <app-date (changeDate)="onDateChanged($event)"></app-date>
-  <ion-item>
-    <span class="ion-padding-start">
-      <ion-button 
-        color="success" 
-        fill="solid" 
-        slot="end" 
-        (click)="filterGroups($event.target, true)" 
-        clickable>주간</ion-button>
-      <ion-button 
-        color="medium" 
-        fill="solid" 
-        slot="end" 
-        (click)="filterGroups($event.target, false)" 
-        clickable>야간</ion-button>
-    </span>
-  </ion-item>
+  <app-working-time (workingTime)="onWorkingTimeChanged($event)"></app-working-time>
   <ion-list>
     <app-time-write
         [filteredGroups]="filteredGroups"
