@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
-import { IonButton } from '@ionic/angular';
-import { Subscription } from 'rxjs';
-
+import { RecoderTemplate } from '../model/recoder-template.model';
 import { RecoderGroup } from './model/recoder-group.model';
 import { Recoder } from './model/recoder.model';
 import { TimeCheckService } from './time-check.service';
@@ -14,7 +12,10 @@ export interface SaveData {
   prop: string, 
   time: string
 }
-const ACTIVE: string = "solid"
+
+export interface WorkingTime {
+  isDayTime: boolean | null;
+}
 
 @Component({
   selector: 'app-time-check',
@@ -25,45 +26,43 @@ const ACTIVE: string = "solid"
 export class TimeCheckPage {
   date: string;
   filteredGroups: RecoderGroup[];
-  daytimeStatus: boolean = true;
-  nightTimeStatus: boolean = true;
-  private _someListener: Subscription = new Subscription();
+  workingTime: WorkingTime;
   private emptyRecoderGroups: RecoderGroup[] = [];
   private recoderGroups: RecoderGroup[];
   constructor(private tcService: TimeCheckService) {}
 
   ionViewDidEnter() {
-    const _temp: RecoderGroup[] = this._fetch(this.date);
-    this._someListener.add(
-      this.tcService.fetchRecoders().subscribe(recoderGroups => {
-        this.emptyRecoderGroups = [...recoderGroups];
-        recoderGroups = _temp ? _temp : recoderGroups;
-        this._setRecoders([...recoderGroups]);
-      })
-    );
+    let _temp: RecoderGroup[] = this._fetch(this.date);
+    this.tcService.fetchRecoders().subscribe(httpRecoders => {
+      if (!_temp || !_temp.length) {
+        let templates: RecoderTemplate[] = this.tcService.fatchTemplate();
+        _temp = this.tcService.toRecoders(templates);
+        _temp = _temp ? _temp : httpRecoders;
+      }
+      this.emptyRecoderGroups = [..._temp];
+      this._setRecoders([..._temp]);
+      this.filterByWorkingTime();
+    })
   }
 
-  ionViewWillLeave() {
-    this._someListener.unsubscribe();
+  onWorkingTimeChanged(event:{workingTime: WorkingTime}) {
+    this.workingTime = event.workingTime;
+    this.filterByWorkingTime();
   }
 
   onDateChanged(event: {date: string}) {
     this.date = event.date;
     this.tcService.setDate(this.date);
     this._initRecordGroup();
-    this._filterByDayTime();
+    this.filterByWorkingTime();
   }
 
-  filterGroups(button: any, isDayTime: boolean) {
-    this._changeButtonState(button);
-    if (isDayTime) {
-      this.daytimeStatus = button.fill == ACTIVE;
-      this.nightTimeStatus = button.nextElementSibling.fill == ACTIVE
-    } else {
-      this.daytimeStatus = button.previousElementSibling.fill == ACTIVE;
-      this.nightTimeStatus = button.fill == ACTIVE;
-    }
-    this._filterByDayTime();
+  filterByWorkingTime() {
+    this.filteredGroups = [...this.recoderGroups];
+    if (!this.workingTime) {
+      return;
+    } 
+    this.filteredGroups = this.recoderGroups.filter(recoder => recoder.isDayTime == this.workingTime.isDayTime);
   }
 
   save(data: SaveData) {
@@ -78,6 +77,11 @@ export class TimeCheckPage {
     this._setRecoders([..._temp]);
   }
 
+  _setRecoders(recoders: RecoderGroup[]) {
+    this.recoderGroups = recoders;
+    this.filteredGroups = [...this.recoderGroups];
+  }
+
   _emptyRecorders() {
     this.emptyRecoderGroups.forEach(group => {
       group.recoders.forEach(recoder => {
@@ -88,25 +92,7 @@ export class TimeCheckPage {
     return this.emptyRecoderGroups;
   }
 
-  _changeButtonState(button: IonButton) {
-    button.fill = button.fill == "outline" ? "solid" : "outline"; // 하.. enum 쓰고싶다 ㅠㅠ
-  }
-
-  _filterByDayTime() {
-    this.filteredGroups = [...this.recoderGroups];
-    if (this.daytimeStatus && this.nightTimeStatus) {
-      return;
-    } 
-    let workTime = this.daytimeStatus || this.nightTimeStatus ? this.daytimeStatus : null
-    this.filteredGroups = this.recoderGroups.filter(recoder => recoder.isDayTime == workTime);
-  }
-
   _fetch(yyyyMMdd: string): RecoderGroup[] {
     return this.tcService.fatchDates(yyyyMMdd);
-  }
-
-  _setRecoders(recoders: RecoderGroup[]) {
-    this.recoderGroups = recoders;
-    this.filteredGroups = [...this.recoderGroups];
   }
 }

@@ -1,0 +1,16 @@
+<ion-item>
+  <span class="ion-padding-start">
+    <ion-button 
+      color="success" 
+      [fill]="dayTime ? 'solid' : 'outline'"
+      slot="end" 
+      (click)="changeWorkingTime(true)" 
+      clickable>주간</ion-button>
+    <ion-button 
+      color="medium" 
+      [fill]="nightTime ? 'solid' : 'outline'"
+      slot="end" 
+      (click)="changeWorkingTime(false)" 
+      clickable>야간</ion-button>
+  </span>
+</ion-item>

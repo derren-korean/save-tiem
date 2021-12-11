@@ -10,6 +10,7 @@ import { TimeValidatorDirective } from './time-write/time-validator.directive';
 import { ShiftFocusDirective } from './time-write/shift-focus.directive';
 import { TimeWriteComponent } from './time-write/time-write.component';
 import { DateComponent } from './date/date.component';
+import { WorkingTimeComponent } from './working-time/working-time.component';
 
 const routes: Routes = [
   {
@@ -25,6 +26,6 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [TimeCheckPage, TimeValidatorDirective, ShiftFocusDirective, TimeWriteComponent, DateComponent]
+  declarations: [TimeCheckPage, TimeValidatorDirective, ShiftFocusDirective, TimeWriteComponent, DateComponent, WorkingTimeComponent]
 })
 export class TimeCheckPageModule {}

@@ -2,7 +2,7 @@ import { Directive, ElementRef, Input} from '@angular/core';
 
 @Directive({
   selector: '[appShiftFocus]',
-  host: { '(keyup)': 'onkeyup()'}
+  host: {'(keyup)': 'onkeyup()'}
 })
 export class ShiftFocusDirective {
 
