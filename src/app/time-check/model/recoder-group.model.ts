@@ -23,6 +23,6 @@ export class RecoderGroup {
   }
 
   _getStation(station: string, postfix: string) {
-    return station.concat(postfix?postfix:"")
+    return station.concat("")
   }
 }

@@ -7,3 +7,4 @@ import { DayTimePipe } from "./day-time.pipe";
     exports: [DayTimePipe]
 })
 export class DayTimePipeModule { }
+

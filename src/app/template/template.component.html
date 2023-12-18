@@ -4,9 +4,6 @@
       <ion-title>
       장소 입력 템플릿
       </ion-title>
-      <ion-button [disabled]="!templateArray.length" slot="start" color="danger" (click)="saveTemplate()">
-        <ion-label>적용하기</ion-label>
-      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -22,21 +19,18 @@
         <ion-card>
           <ion-card-header>
             <ion-item>
+              <ion-icon color="danger" slot="start" name="trash" size="large" (click)="deleteLocation(i)"></ion-icon>
               <ion-card-title>{{template.location}}</ion-card-title>
-              <ion-icon></ion-icon>
-              <ion-label [color]="template.info.isDayTime ? 'success' : 'medium'">{{template.info.isDayTime | dayTime}}점검</ion-label>
-              <ion-button color="danger" slot="end" clear (click)="deleteLocation(i)">
-                <ion-icon name="trash"></ion-icon>
-              </ion-button>
+              <ion-note slot="end">{{template.info.station.length}}</ion-note>
             </ion-item>
           </ion-card-header>
           <ion-card-content>
-            <ion-item>수량: {{template.info.station.length}}</ion-item>
-            <ion-item>
-              <ion-button color="success" slot="start" (click)="presentModal(template.location)">
-                <ion-label>수정하기</ion-label>
-              </ion-button>
-            </ion-item>
+              <ion-item>
+                <ion-chip [color]="template.info.isDayTime ? 'success' : 'medium'">{{template.info.isDayTime | dayTime}}점검</ion-chip>
+                <ion-button color="success" slot="end" (click)="presentModal(template.location)">
+                  <ion-label>수정하기</ion-label>
+                </ion-button>
+              </ion-item>
           </ion-card-content>
         </ion-card>
         <app-add-template 
@@ -47,4 +41,9 @@
       </div>
     </ion-list>
   </div>
+  <ion-fab slot="fixed" vertical="bottom" horizontal="start" (click)="saveTemplate()">
+    <ion-fab-button color="warning" [disabled]="!templateArray.length">
+      <ion-icon name="save"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

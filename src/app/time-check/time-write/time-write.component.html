@@ -2,8 +2,8 @@
   <ion-card-header>
     <ion-item color="primary">
       <ion-label>{{group.location}}</ion-label>
-        <ion-button (click)="reverseOrder(group.location)">
-          <ion-icon slot="icon-only" name="swap-vertical" color="light"></ion-icon>
+        <ion-button (click)="reverseOrder(group.location)" color="light">
+          <ion-icon slot="icon-only" src="../../../assets/svc/swap-vertical.svg"></ion-icon>
         </ion-button>
       <ion-toggle color="light" slot="end" [checked]="show(group.location)" (ionChange)="toggle($event, group.location)"></ion-toggle>
     </ion-item>

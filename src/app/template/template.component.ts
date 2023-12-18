@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ModalController, ToastController } from '@ionic/angular';
 import { RecoderTemplate } from '../model/recoder-template.model';
 import { StationInfo } from '../model/station-info';
 import { RecoderGroup } from '../time-check/model/recoder-group.model';
@@ -13,9 +13,8 @@ import { EditInfoPage } from './edit-info/edit-info.page';
   styleUrls: ['./template.component.scss'],
 })
 export class TemplateComponent implements OnInit {
-
   templateArray: RecoderTemplate[] = [];
-  constructor(public modalController: ModalController, private dao: TimeCheckService) { }
+  constructor(public modalController: ModalController, private dao: TimeCheckService, private toastController: ToastController) { }
 
   ngOnInit() {
     this.templateArray = this.dao.fatchTemplate();
@@ -34,8 +33,15 @@ export class TemplateComponent implements OnInit {
     this.templateArray.splice(index, 1);
   }
 
-  saveTemplate() {
+  async saveTemplate() {
     this.dao.saveTemplate(this.templateArray);
+    const toast = await this.toastController.create({
+      message: '해당 정보를 저장했습니다.',
+      duration: 1500,
+      position: 'bottom',
+    });
+
+    await toast.present();
   }
 
   toTemplate(recoders: RecoderGroup[]): RecoderTemplate[] {

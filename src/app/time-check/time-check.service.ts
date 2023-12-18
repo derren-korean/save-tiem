@@ -30,6 +30,7 @@ export class TimeCheckService {
     .get<JsonData>(this._dataURL)
     .pipe(
       map(res => {
+        if(!res.data.length) return [];
         res.data.forEach((_data)=> this._setGroupMap(_data.location, _data.info));
         return [...this.recoderGroups];
       })
@@ -43,7 +44,7 @@ export class TimeCheckService {
   }
 
   _setGroupMap(location: string, info: StationInfo) {
-    if (!info.station.length) return
+    if (info&&!info.station.length) return
     this.recoderGroups.push(new RecoderGroup(location, info));
   }
 
