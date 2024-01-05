@@ -2,8 +2,10 @@ import { Injectable} from '@angular/core';
 import { StationInfo } from 'src/app/model/station-info';
 import { RecoderGroup } from './model/recoder-group.model';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
 import { RecoderTemplate } from '../model/recoder-template.model';
+import { DateFormatterSingleton } from 'src/app/model/date-formatter';
 
 interface JsonData {
   data: InnerData[];
@@ -25,7 +27,7 @@ export class TimeCheckService {
 
   constructor(private http: HttpClient) {}
 
-  fetchRecoders() {
+  fetchRecoders(): Observable<RecoderGroup[]> {
     return this.http
     .get<JsonData>(this._dataURL)
     .pipe(
@@ -33,7 +35,8 @@ export class TimeCheckService {
         if(!res.data.length) return [];
         res.data.forEach((_data)=> this._setGroupMap(_data.location, _data.info));
         return [...this.recoderGroups];
-      })
+      }),
+      catchError(this.handleError<RecoderGroup[]>('fetch Recoders', []))
     );
   }
 
@@ -48,8 +51,8 @@ export class TimeCheckService {
     this.recoderGroups.push(new RecoderGroup(location, info));
   }
 
-  save(yyyyMMdd: string, recoders: RecoderGroup[]) {
-    window.localStorage.setItem(yyyyMMdd, JSON.stringify(recoders));
+  save(date: string, recoders: RecoderGroup[]) {
+    window.localStorage.setItem(DateFormatterSingleton.toYYYYmmDD(date), JSON.stringify(recoders));
   }
 
   saveTemplate(recoders: RecoderTemplate[]) {
@@ -61,19 +64,26 @@ export class TimeCheckService {
 
   fatchTemplate(): RecoderTemplate[] {
     let _temp: RecoderTemplate[];
-    _temp = JSON.parse(window.localStorage.getItem('save-time-template'));
+    _temp = JSON.parse(window.localStorage.getItem('save-time-template') ?? '{}');
     return _temp ? _temp : [];
   }
 
-  fatchDates(yyyyMMdd: string) :RecoderGroup[] {
-    return JSON.parse(window.localStorage.getItem(yyyyMMdd));
+  fatchDates(date: string) :RecoderGroup[] {
+    return JSON.parse(window.localStorage.getItem(DateFormatterSingleton.toYYYYmmDD(date))??'[]');
   }
 
   fetchDate() {
-    return this.date;
+    return DateFormatterSingleton.toYYYYmmDD(this.date);
   }
 
   setDate(date: string) {
     this.date = date;
+  }
+
+  private handleError<T>(operation = 'operation', result?: T) {
+    return (error: any): Observable<T> => {
+      console.log(`${operation} failed: ${error.message}`);
+      return of(result as T);
+    };
   }
 }

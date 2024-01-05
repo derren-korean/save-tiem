@@ -11,7 +11,8 @@ export class ShiftFocusDirective {
   constructor(private el: ElementRef) {}
 
   onkeyup() {
-    const _el = this.el.nativeElement.firstElementChild;
+    // const _el = this.el.nativeElement.firstElementChild; legacy code for ionic 7 migration
+    const _el = this.el.nativeElement.firstElementChild.getElementsByTagName('input')[0];
     if (_el.maxLength == _el.value.length) {
       this._shiftFocusIfHasNext(this.el.nativeElement.id, this.el.nativeElement.getAttribute('hasNext'));
     }
@@ -41,6 +42,6 @@ export class ShiftFocusDirective {
   }
 
   _shiftEl(id: string, from: string, to: string):HTMLInputElement {
-    return document.getElementById(id.replace(from, to)).firstElementChild as HTMLInputElement;
+    return document.getElementById(id.replace(from, to))?.firstElementChild as HTMLInputElement;
   }
 }

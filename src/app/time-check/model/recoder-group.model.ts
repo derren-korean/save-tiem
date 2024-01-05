@@ -17,12 +17,12 @@ export class RecoderGroup {
   _setRecoders(info: StationInfo) {
     for (let index = 0; index < info.station.length; index++) {
       this.recoders.push(
-        new Recoder(this._getStation(info.station[index], info.postfix), null, null)
+        new Recoder(this._getStation(info.station[index], info.postfix), '', '')
       );
     }
   }
 
-  _getStation(station: string, postfix: string) {
+  _getStation(station: string, postfix?: string) {
     return station.concat("")
   }
 }

@@ -1,9 +1,19 @@
-<ion-item>
-  <ion-datetime 
-    displayFormat="YYYY-MM-DD"
-    min="2021-05-09" 
-    max="2030"
-    [(ngModel)]="datePicker"
-    (ionChange)="onChangeDate()">
-  </ion-datetime>
-</ion-item>
+<ion-item button="true" id="open-date-input">
+  <ion-label>날짜</ion-label>
+  <ion-text slot="end">{{ date }}</ion-text>
+  <ion-popover size="cover" trigger="open-date-input" show-backdrop="false">
+    <ng-template>
+      <ion-datetime
+      displayFormat="YYYY-MM-DD"
+      locale="ko"
+      min="2022-01-09" 
+      max="2030"
+      [showDefaultButtons]="true"
+      presentation="date"
+      [(ngModel)]="datePicker"
+        #popoverDatetime
+        (ionChange)="onChangeDate();"
+      ></ion-datetime>
+    </ng-template>
+  </ion-popover>
+ </ion-item>

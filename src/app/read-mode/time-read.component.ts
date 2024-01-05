@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { Events } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { DateFormatterSingleton } from '../model/date-formatter';
 import { RecoderGroup } from '../time-check/model/recoder-group.model';
 import { Recoder } from '../time-check/model/recoder.model';
 import { TimeCheckService } from '../time-check/time-check.service';
+import { Share } from './share-fab/share-fab.component';
 
 const filledRecord = (recoder:Recoder) => !!recoder.checkTime || !!recoder.savedTime;
 
@@ -15,10 +15,15 @@ const filledRecord = (recoder:Recoder) => !!recoder.checkTime || !!recoder.saved
 })
 export class TimeReadComponent {
   recoderGroups: RecoderGroup[] = [];
-  datePicker: string;
-  savedDates: string[];
-  private _someListener: Subscription = new Subscription();
-  constructor(private tcService: TimeCheckService, public events: Events) {}
+  datePicker: string = ''
+  savedDates: string[] = [];
+  share: Share = {
+    title: "date",
+    text: "recoders",
+    url:""
+  }
+  private _someListener: Subscription = new Subscription();  
+  constructor(private tcService: TimeCheckService) {}
 
   ionViewDidEnter() {
     this._initSavedDates();
@@ -28,6 +33,7 @@ export class TimeReadComponent {
     } else {
       this._initRecordGroup();
     }
+    this._updateShareData();
   }
 
   ionViewWillLeave() {
@@ -36,21 +42,22 @@ export class TimeReadComponent {
 
   onChangeDate() {
     if (this.savedDates.length) {
-      this.datePicker = DateFormatterSingleton.toYYYYmmDD(this.datePicker);
-      if (!this.savedDates.find(date => date == this.datePicker)) {
-        this.datePicker = this.savedDates[0]
+      let formatedDate = DateFormatterSingleton.toYYYYmmDD(this.datePicker);
+      if (!this.savedDates.find(date => date == formatedDate)) {
+        this.datePicker = new Date(this.savedDates[0]).toISOString();
       }
       this._initRecordGroup();
     }
+    this._updateShareData();
   }
 
   _initSavedDates() {
     this.savedDates = [];
     for(var i =0; i < localStorage.length; i++) {
-      if (localStorage.key(i).charAt(0) == 's') {
+      if (localStorage.key(i)!.charAt(0) == 's') {
         continue;
       }
-      this.savedDates.push(localStorage.key(i))
+      this.savedDates.push(localStorage.key(i)!)
     }
     this.savedDates.sort().reverse();
   }
@@ -66,4 +73,24 @@ export class TimeReadComponent {
     this.recoderGroups = [..._temp];
   }
 
+  _updateShareData() {
+    this.share.title = DateFormatterSingleton.toYYYYmmDD(this.datePicker);
+    if(this.recoderGroups) {
+      this.share.text = this._recoderToJson();
+    }
+  }
+
+  _recoderToJson():string {
+    let temp: string = ''
+    for (const group of this.recoderGroups) {
+      temp += group.location += '\n';
+        for (const recoder of group.recoders) {
+          let checkTime = recoder.checkTime ? recoder.checkTime : '점검시간';
+          let savedTime = recoder.savedTime ? recoder.savedTime : '체크시간';
+          temp += recoder.station + ': ' + checkTime + ' ' + savedTime + '\n';
+      }
+    }
+    return temp;
+  }
+  
 }

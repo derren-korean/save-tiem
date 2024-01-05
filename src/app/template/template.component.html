@@ -9,7 +9,7 @@
 </ion-header>
 <ion-content class="ion-padding" [fullscreen]="true">
   <app-add-template 
-    index=0
+    [index]=0
     [locations]="getLocations()"
     (newLocation)="onAddLocation($event)">
   </app-add-template>
@@ -41,7 +41,7 @@
       </div>
     </ion-list>
   </div>
-  <ion-fab slot="fixed" vertical="bottom" horizontal="start" (click)="saveTemplate()">
+  <ion-fab slot="fixed" vertical="top" horizontal="end" (click)="saveTemplate()">
     <ion-fab-button color="warning" [disabled]="!templateArray.length">
       <ion-icon name="save"></ion-icon>
     </ion-fab-button>

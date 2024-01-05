@@ -8,7 +8,8 @@ import { DateFormatterSingleton } from 'src/app/model/date-formatter';
 })
 export class DateComponent implements OnInit {
   @Output() changeDate = new EventEmitter<{date: string}>();
-  datePicker: string = DateFormatterSingleton.nowYYYYmmDD(); // ion-datetime와 bind하기위한 format
+  datePicker: string = new Date().toISOString();
+  date: string= DateFormatterSingleton.toYYYYmmDD(this.datePicker);
 
   constructor() { }
 
@@ -18,12 +19,12 @@ export class DateComponent implements OnInit {
 
   _emitDateChaged() {
     this.changeDate.emit({
-      date: DateFormatterSingleton.toYYYYmmDD(this.datePicker)
+      date: this.datePicker
     });
   }
 
   onChangeDate() {
     this._emitDateChaged();
+    this.date = DateFormatterSingleton.toYYYYmmDD(this.datePicker);
   }
-  
 }

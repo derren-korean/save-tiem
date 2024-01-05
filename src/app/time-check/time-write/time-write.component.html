@@ -1,11 +1,11 @@
-<ion-card *ngFor="let group of filteredGroups; let idx = index;">
+<ion-card *ngFor="let group of filteredGroups; index as idx;">
   <ion-card-header>
     <ion-item color="primary">
-      <ion-label>{{group.location}}</ion-label>
+      <ion-label aria-label="location">{{group.location}}</ion-label>
         <ion-button (click)="reverseOrder(group.location)" color="light">
-          <ion-icon slot="icon-only" src="../../../assets/svc/swap-vertical.svg"></ion-icon>
+          <ion-icon slot="icon-only" name="swap-vertical-outline"></ion-icon>
         </ion-button>
-      <ion-toggle color="light" slot="end" [checked]="show(group.location)" (ionChange)="toggle($event, group.location)"></ion-toggle>
+      <ion-toggle color="light" slot="end" aria-label="location" [checked]="show(group.location)" (ionChange)="toggle($event, group.location)"></ion-toggle>
     </ion-item>
   </ion-card-header>
   <ion-card-content *ngIf="show(group.location);">
@@ -13,10 +13,11 @@
       <ion-grid>
         <ion-row>
           <ion-col size-sm="2">
-            <ion-label>{{recoder.station}}</ion-label>              
+            <ion-label aria-label="station">{{recoder.station}}</ion-label>              
           </ion-col>
           <ion-col size-sm="5">
-            <ion-input 
+            <ion-input
+            aria-label="savedTime" 
               type="text" 
               maxlength="4"
               inputmode="numeric"
@@ -31,6 +32,7 @@
           </ion-col>
           <ion-col size-sm="5">
             <ion-input 
+            aria-label="checkTime" 
               type="text"
               maxlength="4"
               inputmode="numeric" 

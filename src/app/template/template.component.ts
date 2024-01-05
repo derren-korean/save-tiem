@@ -48,7 +48,7 @@ export class TemplateComponent implements OnInit {
     if (!recoders || !recoders.length) { 
       return [];
     }
-    let temp = [];
+    let temp: RecoderTemplate[] = [];
     recoders.forEach(recoder => {
       let info: StationInfo = {isDayTime: recoder.isDayTime, station: this._toStationArray(recoder.recoders)};
       temp.push(new RecoderTemplate(recoder.location, info));

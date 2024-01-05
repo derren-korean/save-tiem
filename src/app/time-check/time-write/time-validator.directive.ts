@@ -9,7 +9,8 @@ export class TimeValidatorDirective {
   constructor(private el: ElementRef) {}
 
   onkeyup() {
-    const _el = this.el.nativeElement.firstElementChild;
+    // const _el = this.el.nativeElement.firstElementChild;  legacy code for ionic 7 migration
+    const _el = this.el.nativeElement.firstElementChild.getElementsByTagName('input')[0];
     if (_el.value != _el.value.trim() || !this.isHHmm(_el.value)){
       this._removeLastString(_el);
       return;

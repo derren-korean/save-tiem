@@ -41,7 +41,7 @@ export class WorkingTimeComponent implements OnInit {
   // WorkingTime.isDaytime == null 이라면, 주/야 아무것도 선택하지 않은 상태.
   _setResult(): void {
     if (this.dayTime && this.nightTime) {
-      this.result = null;
+      this.result = null!;
     } else if (this.dayTime || this.nightTime) {
       this.result = {isDayTime: this.dayTime}
     } else {

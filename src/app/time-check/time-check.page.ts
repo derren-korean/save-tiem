@@ -3,13 +3,14 @@ import { RecoderTemplate } from '../model/recoder-template.model';
 import { RecoderGroup } from './model/recoder-group.model';
 import { Recoder } from './model/recoder.model';
 import { TimeCheckService } from './time-check.service';
+import { DateFormatterSingleton } from '../model/date-formatter';
 
 const filledRecord = (recoder:Recoder) => !!recoder.checkTime || !!recoder.savedTime;
 
 export interface SaveData {
   groupIdx: number, 
   recoderIdx: number, 
-  prop: string, 
+  prop: string,  // checkTime, saveTime
   time: string
 }
 
@@ -66,14 +67,23 @@ export class TimeCheckPage {
   }
 
   save(data: SaveData) {
-    this.filteredGroups[data.groupIdx].recoders[data.recoderIdx][data.prop] = data.time;
+    if (data.prop == 'savedTime') {
+      this.filteredGroups[data.groupIdx].recoders[data.recoderIdx].savedTime = data.time;
+    } else {
+      this.filteredGroups[data.groupIdx].recoders[data.recoderIdx].checkTime = data.time;
+    }
     this.filteredGroups[data.groupIdx].hasFilledRecord = this.filteredGroups[data.groupIdx].recoders.some(filledRecord);
     this.tcService.save(this.date, this.recoderGroups);
   }
 
   _initRecordGroup() {
     let _temp: RecoderGroup[] = this._fetch(this.date);
-    _temp = _temp ? _temp : this._emptyRecorders();
+    if(!_temp || !_temp.length) {
+      _temp = this.tcService.toRecoders(this.tcService.fatchTemplate());
+      _temp ? _temp : [];
+    } else {
+      this._emptyRecorders();
+    }
     this._setRecoders([..._temp]);
   }
 
@@ -85,14 +95,14 @@ export class TimeCheckPage {
   _emptyRecorders() {
     this.emptyRecoderGroups.forEach(group => {
       group.recoders.forEach(recoder => {
-        recoder.checkTime = null;
-        recoder.savedTime = null;
+        recoder.checkTime = '';
+        recoder.savedTime = '';
       })
     })
     return this.emptyRecoderGroups;
   }
 
   _fetch(yyyyMMdd: string): RecoderGroup[] {
-    return this.tcService.fatchDates(yyyyMMdd);
+    return this.tcService.fatchDates(DateFormatterSingleton.toYYYYmmDD(yyyyMMdd));
   }
 }

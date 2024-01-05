@@ -4,6 +4,7 @@ import { IonicModule } from '@ionic/angular';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TimeReadComponent } from './time-read.component';
+import { ShareFabComponent } from './share-fab/share-fab.component';
 
 const routes: Routes = [
   {
@@ -19,6 +20,6 @@ const routes: Routes = [
     FormsModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [TimeReadComponent]
+  declarations: [TimeReadComponent, ShareFabComponent]
 })
 export class TimeReadModule { }
