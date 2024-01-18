@@ -25,10 +25,8 @@ declare var window: ExtendWindow;
 export class ShareFabComponent {
   @Input() share: Share;
 
-  async onClick() {
-    
+  onClick() {
     try{
-      console.log(window.navigator.canShare)
       window.navigator.share(this.share);
     } catch(error) {
       console.log('You app is not shared, reason: ',error);

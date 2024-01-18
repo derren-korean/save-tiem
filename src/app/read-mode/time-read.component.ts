@@ -18,9 +18,7 @@ export class TimeReadComponent {
   datePicker: string = ''
   savedDates: string[] = [];
   share: Share = {
-    title: "date",
-    text: "recoders",
-    url:""
+    text: "recoders"
   }
   private _someListener: Subscription = new Subscription();  
   constructor(private tcService: TimeCheckService) {}
@@ -74,19 +72,19 @@ export class TimeReadComponent {
   }
 
   _updateShareData() {
-    this.share.title = DateFormatterSingleton.toYYYYmmDD(this.datePicker);
     if(this.recoderGroups) {
       this.share.text = this._recoderToJson();
     }
   }
 
   _recoderToJson():string {
-    let temp: string = ''
+    let temp: string = DateFormatterSingleton.toYYYYmmDD(this.datePicker) + ' 이미지 시간';
     for (const group of this.recoderGroups) {
+      temp += '\n';
       temp += group.location += '\n';
         for (const recoder of group.recoders) {
           let checkTime = recoder.checkTime ? recoder.checkTime : '점검시간';
-          let savedTime = recoder.savedTime ? recoder.savedTime : '체크시간';
+          let savedTime = recoder.savedTime ? recoder.savedTime : '저장된시간';
           temp += recoder.station + ': ' + checkTime + ' ' + savedTime + '\n';
       }
     }

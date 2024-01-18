@@ -24,10 +24,10 @@
               placeholder="점검시간"
               appTimeValidator
               id="{{_TIME_TYPE[0]}}-{{idx}}-{{recoderIdx}}"
-              [(ngModel)]="recoder.savedTime"
+              [(ngModel)]="recoder.checkTime"
               [appShiftFocus]="_TIME_TYPE"
               [attr.hasNext]="true"
-              (keyup)="onSave($event, idx, recoderIdx, 'savedTime')"
+              (keyup)="onSave($event, idx, recoderIdx, 'checkTime')"
             ></ion-input>
           </ion-col>
           <ion-col size-sm="5">
@@ -39,10 +39,10 @@
               placeholder="저장된시간"
               appTimeValidator
               id="{{_TIME_TYPE[1]}}-{{idx}}-{{recoderIdx}}"
-              [(ngModel)]="recoder.checkTime"
+              [(ngModel)]="recoder.savedTime"
               [appShiftFocus]="_TIME_TYPE"
               [attr.hasNext]="!!group.recoders[recoderIdx+1]"
-              (keyup)="onSave($event, idx, recoderIdx, 'checkTime')"
+              (keyup)="onSave($event, idx, recoderIdx, 'savedTime')"
             ></ion-input>
           </ion-col>
         </ion-row>

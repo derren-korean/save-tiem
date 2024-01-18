@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { RecoderTemplate } from 'src/app/model/recoder-template.model';
 
 const DEFAULT_ALARM_MSG: string = "장소가 비어있습니다. 글자를 입력해주세요."
@@ -7,7 +7,7 @@ const DEFAULT_ALARM_MSG: string = "장소가 비어있습니다. 글자를 입�
   templateUrl: './add-template.component.html',
   styleUrls: ['./add-template.component.scss'],
 })
-export class AddTemplateComponent implements OnInit {
+export class AddTemplateComponent  {
 
   constructor() { }
   @Input() locations: string[];
@@ -17,8 +17,6 @@ export class AddTemplateComponent implements OnInit {
   location: string;
   locationAlarm: string = DEFAULT_ALARM_MSG;
   errOnLocationName: boolean = false;
-
-  ngOnInit() {}
 
   onLocationChanged(location: string) {
     if(!!location) {

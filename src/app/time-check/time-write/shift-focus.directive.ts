@@ -12,8 +12,8 @@ export class ShiftFocusDirective {
 
   onkeyup() {
     // const _el = this.el.nativeElement.firstElementChild; legacy code for ionic 7 migration
-    const _el = this.el.nativeElement.firstElementChild.getElementsByTagName('input')[0];
-    if (_el.maxLength == _el.value.length) {
+    const _el = this.el.nativeElement;
+    if (_el.maxlength == _el.value.length) {
       this._shiftFocusIfHasNext(this.el.nativeElement.id, this.el.nativeElement.getAttribute('hasNext'));
     }
   }

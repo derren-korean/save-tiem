@@ -32,7 +32,7 @@ export class EditInfoPage implements OnInit {
   }
 
   updateStation(index: number, event:any) {
-    this.stationDummy[index] = event.target.firstElementChild.value;
+    this.stationDummy[index] = event.target.getElementsByTagName('input')[0].value;
   }
 
   closeModal() {
